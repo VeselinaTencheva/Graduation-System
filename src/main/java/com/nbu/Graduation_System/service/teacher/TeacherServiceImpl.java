@@ -1,39 +1,44 @@
 package com.nbu.Graduation_System.service.teacher;
 
+import com.nbu.Graduation_System.dto.TeacherDto;
 import com.nbu.Graduation_System.entity.Teacher;
-import com.nbu.Graduation_System.entity.ThesisApplication;
+import com.nbu.Graduation_System.mapper.TeacherMapper;
 import com.nbu.Graduation_System.repository.TeacherRepository;
-import com.nbu.Graduation_System.repository.ThesisApplicationRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class TeacherServiceImpl implements TeacherService {
     
     private final TeacherRepository teacherRepository;
-    private final ThesisApplicationRepository thesisApplicationRepository;
+    private final TeacherMapper teacherMapper;
 
     public TeacherServiceImpl(TeacherRepository teacherRepository, 
-                            ThesisApplicationRepository thesisApplicationRepository) {
+                            TeacherMapper teacherMapper) {
         this.teacherRepository = teacherRepository;
-        this.thesisApplicationRepository = thesisApplicationRepository;
+        this.teacherMapper = teacherMapper;
     }
 
     @Override
-    public Teacher save(Teacher teacher) {
-        return teacherRepository.save(teacher);
+    public TeacherDto save(TeacherDto teacherDto) {
+        Teacher teacher = teacherMapper.toEntity(teacherDto);
+        teacher = teacherRepository.save(teacher);
+        return teacherMapper.toDto(teacher);
     }
 
     @Override
-    public Optional<Teacher> findById(Long id) {
-        return teacherRepository.findById(id);
+    public Optional<TeacherDto> findById(Long id) {
+        return teacherRepository.findById(id)
+                .map(teacherMapper::toDto);
     }
 
     @Override
-    public List<Teacher> findAll() {
-        return teacherRepository.findAll();
+    public List<TeacherDto> findAll() {
+        return teacherRepository.findAll().stream()
+                .map(teacherMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -44,12 +49,5 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public boolean existsById(Long id) {
         return teacherRepository.existsById(id);
-    }
-
-    @Override
-    public Set<ThesisApplication> findSupervisedTheses(Long teacherId) {
-        Teacher teacher = teacherRepository.findById(teacherId)
-            .orElseThrow(() -> new RuntimeException("Teacher not found"));
-        return thesisApplicationRepository.findBySupervisor(teacher);
     }
 }

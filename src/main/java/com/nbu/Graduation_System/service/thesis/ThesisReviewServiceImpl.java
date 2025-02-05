@@ -1,17 +1,20 @@
 package com.nbu.Graduation_System.service.thesis;
 
+import com.nbu.Graduation_System.dto.ThesisReviewDto;
 import com.nbu.Graduation_System.entity.ThesisReview;
-import com.nbu.Graduation_System.entity.Thesis;
 import com.nbu.Graduation_System.entity.Teacher;
+import com.nbu.Graduation_System.entity.Thesis;
+import com.nbu.Graduation_System.mapper.ThesisReviewMapper;
 import com.nbu.Graduation_System.repository.ThesisReviewRepository;
-import com.nbu.Graduation_System.repository.ThesisRepository;
 import com.nbu.Graduation_System.repository.TeacherRepository;
+import com.nbu.Graduation_System.repository.ThesisRepository;
 import org.springframework.stereotype.Service;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class ThesisReviewServiceImpl implements ThesisReviewService {
@@ -19,28 +22,36 @@ public class ThesisReviewServiceImpl implements ThesisReviewService {
     private final ThesisReviewRepository thesisReviewRepository;
     private final ThesisRepository thesisRepository;
     private final TeacherRepository teacherRepository;
+    private final ThesisReviewMapper thesisReviewMapper;
 
     public ThesisReviewServiceImpl(ThesisReviewRepository thesisReviewRepository,
                                  ThesisRepository thesisRepository,
-                                 TeacherRepository teacherRepository) {
+                                 TeacherRepository teacherRepository,
+                                 ThesisReviewMapper thesisReviewMapper) {
         this.thesisReviewRepository = thesisReviewRepository;
         this.thesisRepository = thesisRepository;
+        this.thesisReviewMapper = thesisReviewMapper;
         this.teacherRepository = teacherRepository;
     }
 
     @Override
-    public ThesisReview save(ThesisReview review) {
-        return thesisReviewRepository.save(review);
+    public ThesisReviewDto save(ThesisReviewDto reviewDto) {
+        ThesisReview review = thesisReviewMapper.toEntity(reviewDto);
+        review = thesisReviewRepository.save(review);
+        return thesisReviewMapper.toDto(review);
     }
 
     @Override
-    public Optional<ThesisReview> findById(Long id) {
-        return thesisReviewRepository.findById(id);
+    public Optional<ThesisReviewDto> findById(Long id) {
+        return thesisReviewRepository.findById(id)
+                .map(thesisReviewMapper::toDto);
     }
 
     @Override
-    public List<ThesisReview> findAll() {
-        return thesisReviewRepository.findAll();
+    public List<ThesisReviewDto> findAll() {
+        return thesisReviewRepository.findAll().stream()
+                .map(thesisReviewMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -54,23 +65,32 @@ public class ThesisReviewServiceImpl implements ThesisReviewService {
     }
 
     @Override
-    public Set<ThesisReview> findByThesis(Thesis thesis) {
-        return thesisReviewRepository.findByThesis(thesis);
+    public Set<ThesisReviewDto> findByThesisId(Long thesisId) {
+        Thesis thesis = thesisRepository.findById(thesisId)
+            .orElseThrow(() -> new EntityNotFoundException("Thesis not found"));
+            
+        return thesisReviewRepository.findByThesis(thesis).stream()
+            .map(thesisReviewMapper::toDto)
+            .collect(Collectors.toSet());
     }
 
     @Override
-    public Set<ThesisReview> findByReviewer(Teacher reviewer) {
-        return thesisReviewRepository.findByReviewer(reviewer);
+    public Set<ThesisReviewDto> findByReviewerId(Long reviewerId) {
+        Teacher reviewer = teacherRepository.findById(reviewerId)
+            .orElseThrow(() -> new EntityNotFoundException("Reviewer not found"));
+        return thesisReviewRepository.findByReviewer(reviewer).stream()
+        .map(thesisReviewMapper::toDto)
+        .collect(Collectors.toSet());
     }
 
     @Override
-    public ThesisReview submitReview(Long thesisId, Long reviewerId, String content, boolean isPositive) {
+    public ThesisReviewDto submitReview(Long thesisId, Long reviewerId, String content, boolean isPositive) {
         Thesis thesis = thesisRepository.findById(thesisId)
             .orElseThrow(() -> new EntityNotFoundException("Thesis not found"));
         
         Teacher reviewer = teacherRepository.findById(reviewerId)
             .orElseThrow(() -> new EntityNotFoundException("Reviewer not found"));
-
+        
         ThesisReview review = new ThesisReview();
         review.setThesis(thesis);
         review.setReviewer(reviewer);
@@ -78,6 +98,7 @@ public class ThesisReviewServiceImpl implements ThesisReviewService {
         review.setPositive(isPositive);
         review.setSubmissionDate(LocalDateTime.now());
 
-        return thesisReviewRepository.save(review);
+        review = thesisReviewRepository.save(review);
+        return thesisReviewMapper.toDto(review);
     }
 }

@@ -12,6 +12,8 @@ import com.nbu.Graduation_System.entity.base.BaseEntity;
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "thesis_reviews")
 public class ThesisReview extends BaseEntity {
+
+    // TODO: could be removed
     @Column(columnDefinition = "TEXT")
     private String content;
     

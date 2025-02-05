@@ -1,18 +1,19 @@
 package com.nbu.Graduation_System.service.thesis;
 
-import com.nbu.Graduation_System.entity.ThesisDefense;
+import com.nbu.Graduation_System.dto.ThesisDefenseDto;
 import com.nbu.Graduation_System.entity.Teacher;
+
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
+import java.util.Optional;
 
 public interface ThesisDefenseService {
-    ThesisDefense save(ThesisDefense defense);
-    Optional<ThesisDefense> findById(Long id);
-    List<ThesisDefense> findAll();
+    ThesisDefenseDto save(ThesisDefenseDto defense);
+    Optional<ThesisDefenseDto> findById(Long id);
+    List<ThesisDefenseDto> findAll();
     void deleteById(Long id);
     boolean existsById(Long id);
-    ThesisDefense scheduleDefense(Long thesisId, LocalDateTime defenseDate, Set<Teacher> committee);
-    ThesisDefense gradeDefense(Long defenseId, Double grade);
+    ThesisDefenseDto scheduleDefense(Long thesisId, LocalDateTime defenseDate, Set<Teacher> committee);
+    ThesisDefenseDto gradeDefense(Long defenseId, Double grade);
 }
