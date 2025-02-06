@@ -1,46 +1,41 @@
 package com.nbu.Graduation_System.service.department;
 
-import com.nbu.Graduation_System.dto.DepartmentDto;
+import com.nbu.Graduation_System.dto.department.*;
 import com.nbu.Graduation_System.entity.Department;
-import com.nbu.Graduation_System.entity.enums.DepartmentType;
-import com.nbu.Graduation_System.mapper.DepartmentMapper;
 import com.nbu.Graduation_System.repository.DepartmentRepository;
-import org.springframework.stereotype.Service;
-import jakarta.persistence.EntityNotFoundException;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import com.nbu.Graduation_System.util.MapperUtil;
 
+import org.springframework.stereotype.Service;
+
+import lombok.AllArgsConstructor;
+
+import java.util.List;
+
+@AllArgsConstructor
 @Service
 public class DepartmentServiceImpl implements DepartmentService {
     
     private final DepartmentRepository departmentRepository;
-    private final DepartmentMapper departmentMapper;
-
-    public DepartmentServiceImpl(DepartmentRepository departmentRepository,
-                               DepartmentMapper departmentMapper) {
-        this.departmentRepository = departmentRepository;
-        this.departmentMapper = departmentMapper;
-    }
+    private final MapperUtil mapperUtil;
 
     @Override
-    public DepartmentDto save(DepartmentDto departmentDto) {
-        Department department = departmentMapper.toEntity(departmentDto);
-        department = departmentRepository.save(department);
-        return departmentMapper.toDto(department);
-    }
-
-    @Override
-    public Optional<DepartmentDto> findById(Long id) {
-        return departmentRepository.findById(id)
-                .map(departmentMapper::toDto);
+    public DepartmentDto findById(Long id) {
+        return mapperUtil.getModelMapper().map(
+                departmentRepository.findById(id)
+                        .orElseThrow(() -> new RuntimeException("Department with id=" + id + " not found!")),
+                DepartmentDto.class);
     }
 
     @Override
     public List<DepartmentDto> findAll() {
-        return departmentRepository.findAll().stream()
-                .map(departmentMapper::toDto)
-                .collect(Collectors.toList());
+        return mapperUtil.mapList(departmentRepository.findAll(), DepartmentDto.class);
+    }
+
+    @Override
+    public DepartmentDto save(CreateDepartmentDto departmentDto) {
+        Department department = mapperUtil.getModelMapper().map(departmentDto, Department.class);
+        department = departmentRepository.save(department);
+        return mapperUtil.getModelMapper().map(department, DepartmentDto.class);
     }
 
     @Override
@@ -53,19 +48,19 @@ public class DepartmentServiceImpl implements DepartmentService {
         return departmentRepository.existsById(id);
     }
 
-    @Override
-    public Optional<DepartmentDto> findByType(DepartmentType type) {
-        return departmentRepository.findByType(type)
-                .map(departmentMapper::toDto);
-    }
+    // @Override
+    // public Optional<DepartmentDto> findByType(DepartmentType type) {
+    //     return departmentRepository.findByType(type)
+    //             .map(department -> mapperUtil.getModelMapper().map(department, DepartmentDto.class));
+    // }
 
-    @Override
-    public DepartmentDto updateContactInfo(Long departmentId, String email) {
-        Department department = departmentRepository.findById(departmentId)
-            .orElseThrow(() -> new EntityNotFoundException("Department not found"));
-        department.setContactEmail(email);
+    // @Override
+    // public DepartmentDto updateContactInfo(Long departmentId, String email) {
+    //     Department department = departmentRepository.findById(departmentId)
+    //         .orElseThrow(() -> new RuntimeException("Department not found"));
+    //     department.setContactEmail(email);
         
-        department = departmentRepository.save(department);
-        return departmentMapper.toDto(department);
-    }
+    //     department = departmentRepository.save(department);
+    //     return mapperUtil.getModelMapper().map(department, DepartmentDto.class);
+    // }
 }

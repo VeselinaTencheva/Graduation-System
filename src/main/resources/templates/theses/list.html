@@ -27,10 +27,18 @@
                     <tr th:each="thesis : ${theses}">
                         <td th:text="${thesis.id}"></td>
                         <td th:text="${thesis.title}"></td>
-                        <td th:text="${thesis.student?.name}"></td>
-                        <td th:text="${thesis.supervisor?.name}"></td>
-                        <td th:text="${thesis.status}"></td>
                         <td>
+                            <span th:if="${thesis.thesisApplication != null && thesis.thesisApplication.student != null}">
+                                <a th:href="@{'/students/'+${thesis.thesisApplication.student.id}}" 
+                                   th:text="${thesis.thesisApplication.student.name}" />
+                            </span>
+                        </td>
+                        <td>
+                            <span th:if="${thesis.supervisor != null}">
+                                <a th:href="@{'/teachers/'+${thesis.supervisor.id}}" th:text="${thesis.supervisor.name}"/>
+                            </span>
+                        </td>
+                        <td th:text="${thesis.status}"></td>
                             <div class="btn-group" role="group">
                                 <a th:href="@{/theses/{id}(id=${thesis.id})}" 
                                    class="btn btn-sm btn-info">View</a>

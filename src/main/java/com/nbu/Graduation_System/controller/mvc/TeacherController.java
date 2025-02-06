@@ -1,79 +1,44 @@
 package com.nbu.Graduation_System.controller.mvc;
 
-import com.nbu.Graduation_System.dto.TeacherDto;
+import com.nbu.Graduation_System.dto.teacher.TeacherDto;
 import com.nbu.Graduation_System.service.teacher.TeacherService;
+import com.nbu.Graduation_System.util.MapperUtil;
+
+import lombok.AllArgsConstructor;
+
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
+@AllArgsConstructor
 @RequestMapping("/teachers")
 public class TeacherController {
     
     private final TeacherService teacherService;
-
-    public TeacherController(TeacherService teacherService) {
-        this.teacherService = teacherService;
-    }
+    private final MapperUtil mapperUtil;
 
     @GetMapping
     public String listTeachers(Model model) {
-        model.addAttribute("teachers", teacherService.findAll());
-        return "teachers/list";
+        List<TeacherDto> teachers = mapperUtil
+                .mapList(this.teacherService.findAll(), TeacherDto.class);
+        model.addAttribute("teachers", teachers);
+        return "/teachers/list";
     }
 
     @GetMapping("/{id}")
     public String viewTeacher(@PathVariable Long id, Model model) {
-        return teacherService.findById(id)
-                .map(teacher -> {
-                    model.addAttribute("teacher", teacher);
-                    return "teachers/view";
-                })
-                .orElse("redirect:/teachers");
+        TeacherDto teacher = mapperUtil.getModelMapper().map(
+                teacherService.findById(id), TeacherDto.class);
+        model.addAttribute("teacher", teacher);
+        return "/teachers/view";
     }
 
-    @GetMapping("/new")
-    public String newTeacherForm(Model model) {
-        model.addAttribute("teacher", new TeacherDto());
-        return "teachers/form";
-    }
-
-    @PostMapping
-    public String createTeacher(@ModelAttribute TeacherDto teacherDto, RedirectAttributes redirectAttributes) {
-        TeacherDto savedTeacher = teacherService.save(teacherDto);
-        redirectAttributes.addFlashAttribute("message", "Teacher created successfully");
-        return "redirect:/teachers/" + savedTeacher.getId();
-    }
-
-    @GetMapping("/{id}/edit")
-    public String editTeacherForm(@PathVariable Long id, Model model) {
-        return teacherService.findById(id)
-                .map(teacher -> {
-                    model.addAttribute("teacher", teacher);
-                    return "teachers/form";
-                })
-                .orElse("redirect:/teachers");
-    }
-
-    @PostMapping("/{id}")
-    public String updateTeacher(@PathVariable Long id, @ModelAttribute TeacherDto teacherDto, 
-                              RedirectAttributes redirectAttributes) {
-        if (!teacherService.existsById(id)) {
-            return "redirect:/teachers";
-        }
-        teacherDto.setId(id);
-        teacherService.save(teacherDto);
-        redirectAttributes.addFlashAttribute("message", "Teacher updated successfully");
-        return "redirect:/teachers/" + id;
-    }
-
-    @PostMapping("/{id}/delete")
-    public String deleteTeacher(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        if (teacherService.existsById(id)) {
-            teacherService.deleteById(id);
-            redirectAttributes.addFlashAttribute("message", "Teacher deleted successfully");
-        }
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable Long id) {
+        this.teacherService.deleteById(id);
         return "redirect:/teachers";
     }
 }

@@ -23,22 +23,18 @@
                 </div>
                 <div class="row mb-3">
                     <div class="col-sm-3"><strong>Description:</strong></div>
-                    <div class="col-sm-9" th:text="${thesis.description}"></div>
+                    <div class="col-sm-9" th:text="${thesis.content}"></div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-sm-3"><strong>Student:</strong></div>
                     <div class="col-sm-9">
-                        <a th:if="${thesis.student}" 
-                           th:href="@{/students/{id}(id=${thesis.student.id})}"
-                           th:text="${thesis.student.name}"></a>
+                        <a th:if="${thesis.student}" th:href="@{'/students/'+${thesis.student.id}}" th:text="${thesis.student.name}" />
                     </div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-sm-3"><strong>Supervisor:</strong></div>
                     <div class="col-sm-9">
-                        <a th:if="${thesis.supervisor}" 
-                           th:href="@{/teachers/{id}(id=${thesis.supervisor.id})}"
-                           th:text="${thesis.supervisor.name}"></a>
+                        <a th:if="${thesis.supervisor}" th:href="@{'/teachers/'+${thesis.supervisor.id}}" th:text="${thesis.supervisor.name}"></a>
                     </div>
                 </div>
                 <div class="row mb-3">

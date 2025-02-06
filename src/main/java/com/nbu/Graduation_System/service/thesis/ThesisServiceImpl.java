@@ -1,51 +1,43 @@
 package com.nbu.Graduation_System.service.thesis;
 
-import com.nbu.Graduation_System.dto.ThesisDto;
+import com.nbu.Graduation_System.dto.thesis.CreateThesisDto;
+import com.nbu.Graduation_System.dto.thesis.ThesisDto;
 import com.nbu.Graduation_System.entity.Thesis;
 import com.nbu.Graduation_System.entity.ThesisApplication;
-import com.nbu.Graduation_System.mapper.ThesisMapper;
 import com.nbu.Graduation_System.repository.ThesisRepository;
+import com.nbu.Graduation_System.util.MapperUtil;
+
 import org.springframework.stereotype.Service;
-import java.time.LocalDateTime;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
 
 @Service
+@AllArgsConstructor
+@Transactional
 public class ThesisServiceImpl implements ThesisService {
     
     private final ThesisRepository thesisRepository;
-    private final ThesisMapper thesisMapper;
-
-    public ThesisServiceImpl(ThesisRepository thesisRepository,
-                           ThesisMapper thesisMapper) {
-        this.thesisRepository = thesisRepository;
-        this.thesisMapper = thesisMapper;
-    }
+    private final MapperUtil mapperUtil;
 
     @Override
-    public ThesisDto save(ThesisDto thesisDto) {
-        Thesis thesis = thesisMapper.toEntity(thesisDto);
-        thesis = thesisRepository.save(thesis);
-        return thesisMapper.toDto(thesis);
-    }
-
-    @Override
-    public Optional<ThesisDto> findById(Long id) {
-        return thesisRepository.findById(id)
-                .map(thesisMapper::toDto);
+    public ThesisDto findById(Long id) {
+        return mapperUtil.getModelMapper().map(
+                thesisRepository.findById(id)
+                        .orElseThrow(() -> new RuntimeException("Thesis with id=" + id + " not found!")),
+                ThesisDto.class);
     }
 
     @Override
     public List<ThesisDto> findAll() {
-        return thesisRepository.findAll().stream()
-                .map(thesisMapper::toDto)
-                .collect(Collectors.toList());
+        return mapperUtil.mapList(thesisRepository.findAll(), ThesisDto.class);
     }
 
     @Override
-    public void deleteById(Long id) {
-        thesisRepository.deleteById(id);
+    public ThesisDto save(CreateThesisDto thesisDto) {
+        Thesis thesis = mapperUtil.getModelMapper().map(thesisDto, Thesis.class);
+        thesis = thesisRepository.save(thesis);
+        return mapperUtil.getModelMapper().map(thesis, ThesisDto.class);
     }
 
     @Override
@@ -54,12 +46,16 @@ public class ThesisServiceImpl implements ThesisService {
     }
 
     @Override
+    public void deleteById(Long id) {
+        thesisRepository.deleteById(id);
+    }
+
+    @Override
     public ThesisDto createFromApplication(ThesisApplication application) {
         Thesis thesis = new Thesis();
         thesis.setTitle(application.getTitle());
         thesis.setThesisApplication(application);
-        thesis.setSubmissionDate(LocalDateTime.now());
         thesis = thesisRepository.save(thesis);
-        return thesisMapper.toDto(thesis);
+        return mapperUtil.getModelMapper().map(thesis, ThesisDto.class);
     }
 }

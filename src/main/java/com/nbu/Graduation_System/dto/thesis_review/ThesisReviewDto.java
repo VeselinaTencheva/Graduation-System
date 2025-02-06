@@ -1,14 +1,16 @@
-package com.nbu.Graduation_System.dto;
+package com.nbu.Graduation_System.dto.thesis_review;
 
 import lombok.Data;
 import java.time.LocalDateTime;
 
+import com.nbu.Graduation_System.dto.teacher.TeacherDto;
+import com.nbu.Graduation_System.dto.thesis.ThesisDto;
+
 @Data
 public class ThesisReviewDto {
     private Long id;
-    private String content;
-    private Double grade;
     private LocalDateTime submissionDate;
+    private boolean isPositive;
     private ThesisDto thesis;
     private TeacherDto reviewer;
 }

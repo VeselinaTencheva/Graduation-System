@@ -1,4 +1,4 @@
-package com.nbu.Graduation_System.dto;
+package com.nbu.Graduation_System.dto.user;
 
 import com.nbu.Graduation_System.entity.enums.UserRoleType;
 import lombok.Data;
@@ -8,6 +8,5 @@ public class UserDto {
     private Long id;
     private String name;
     private String email;
-    private String password;
     private UserRoleType role;
 }

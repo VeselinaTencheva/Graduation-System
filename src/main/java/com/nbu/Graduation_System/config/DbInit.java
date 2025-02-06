@@ -175,7 +175,6 @@ public class DbInit implements CommandLineRunner {
         Thesis thesis = new Thesis();
         thesis.setTitle(title);
         thesis.setContent(content);
-        thesis.setSubmissionDate(LocalDateTime.now());
         thesis.setThesisApplication(application);
         return thesisRepository.save(thesis);
     }

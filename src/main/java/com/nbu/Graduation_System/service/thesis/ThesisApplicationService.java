@@ -1,18 +1,17 @@
 package com.nbu.Graduation_System.service.thesis;
 
-import com.nbu.Graduation_System.dto.ThesisApplicationDto;
-import com.nbu.Graduation_System.entity.enums.ThesisApplicationStatusType;
+import com.nbu.Graduation_System.dto.thesis_application.CreateThesisApplicationDto;
+import com.nbu.Graduation_System.dto.thesis_application.ThesisApplicationDto;
+
 import java.util.List;
-import java.util.Set;
-import java.util.Optional;
 
 public interface ThesisApplicationService {
-    ThesisApplicationDto save(ThesisApplicationDto application);
-    Optional<ThesisApplicationDto> findById(Long id);
+    ThesisApplicationDto save(CreateThesisApplicationDto application);
+    ThesisApplicationDto findById(Long id);
     List<ThesisApplicationDto> findAll();
     void deleteById(Long id);
-    boolean existsById(Long id);
-    Set<ThesisApplicationDto> findByStudentId(Long studentId);
-    Set<ThesisApplicationDto> findBySupervisorId(Long supervisorId);
-    ThesisApplicationDto updateStatus(Long applicationId, ThesisApplicationStatusType status);
+    // boolean existsById(Long id);
+    // Set<ThesisApplicationDto> findByStudentId(Long studentId);
+    // Set<ThesisApplicationDto> findBySupervisorId(Long supervisorId);
+    // ThesisApplicationDto updateStatus(Long applicationId, ThesisApplicationStatusType status);
 }
