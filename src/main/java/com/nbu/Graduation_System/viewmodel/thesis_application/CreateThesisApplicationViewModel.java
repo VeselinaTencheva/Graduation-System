@@ -7,9 +7,18 @@ import com.nbu.Graduation_System.viewmodel.thesis.ThesisViewModel;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
-import lombok.Data;
 
-@Data
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
 public class CreateThesisApplicationViewModel {
     @NotNull(message = "Submission date cannot be null")
     @PastOrPresent(message = "Submission date cannot be in the future")

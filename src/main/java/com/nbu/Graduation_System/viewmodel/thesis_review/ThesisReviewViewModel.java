@@ -5,11 +5,20 @@ import com.nbu.Graduation_System.dto.thesis.ThesisDto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
-import lombok.Data;
 
 import java.time.LocalDateTime;
 
-@Data
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
 public class ThesisReviewViewModel {
 
     private Long id;

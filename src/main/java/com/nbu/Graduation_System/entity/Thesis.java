@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 
 import com.nbu.Graduation_System.entity.base.BaseEntity;
 
@@ -16,12 +15,12 @@ import com.nbu.Graduation_System.entity.base.BaseEntity;
 public class Thesis extends BaseEntity {
 
     @NotBlank
-    @Size(min = 5, max = 20, message="Min 5, Max 20")
+    // @Size(min = 5, max = 20, message="Min 5, Max 20")
     private String title;
     
     @Column(columnDefinition = "TEXT")
     @NotBlank
-    @Size(min = 5, max = 100, message="Min 5, Max 100")
+    // @Size(min = 5, max = 100, message="Min 5, Max 100")
     private String content;
     
     @OneToOne(optional = false)

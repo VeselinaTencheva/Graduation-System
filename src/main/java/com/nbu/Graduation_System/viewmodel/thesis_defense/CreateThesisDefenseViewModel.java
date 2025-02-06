@@ -1,4 +1,4 @@
-package com.nbu.Graduation_System.viewmodel.thesis_review;
+package com.nbu.Graduation_System.viewmodel.thesis_defense;
 
 import java.time.LocalDateTime;
 
@@ -18,7 +18,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class CreateThesisReviewViewModel {
+public class CreateThesisDefenseViewModel {
     @NotNull(message = "Submission date cannot be null")
     @PastOrPresent(message = "Submission date cannot be in the future")
     private LocalDateTime submissionDate;
