@@ -9,11 +9,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/theses")
-public class ThesisController {
+public class ThesisApiController {
     
     private final ThesisService thesisService;
 
-    public ThesisController(ThesisService thesisService) {
+    public ThesisApiController(ThesisService thesisService) {
         this.thesisService = thesisService;
     }
 

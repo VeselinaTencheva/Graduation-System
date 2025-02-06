@@ -9,11 +9,11 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/api/thesis-reviews")
-public class ThesisReviewController {
+public class ThesisReviewApiController {
     
     private final ThesisReviewService thesisReviewService;
 
-    public ThesisReviewController(ThesisReviewService thesisReviewService) {
+    public ThesisReviewApiController(ThesisReviewService thesisReviewService) {
         this.thesisReviewService = thesisReviewService;
     }
 

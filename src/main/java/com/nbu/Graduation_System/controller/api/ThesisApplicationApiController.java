@@ -10,11 +10,11 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/api/thesis-applications")
-public class ThesisApplicationController {
+public class ThesisApplicationApiController {
     
     private final ThesisApplicationService thesisApplicationService;
 
-    public ThesisApplicationController(ThesisApplicationService thesisApplicationService) {
+    public ThesisApplicationApiController(ThesisApplicationService thesisApplicationService) {
         this.thesisApplicationService = thesisApplicationService;
     }
 

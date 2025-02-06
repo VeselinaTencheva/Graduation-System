@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: header('Graduation System')">
+</head>
+<body>
+    <nav th:replace="fragments/layout :: navigation"></nav>
+    
+    <div class="container">
+        <div class="jumbotron bg-light p-5 rounded mb-4">
+            <h1 class="display-4" th:text="${welcome}">Welcome to Graduation System</h1>
+            <p class="lead">Manage students, teachers, and theses in one place</p>
+        </div>
+        
+        <div class="row mb-4">
+            <div class="col-md-4 mb-3">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Students</h5>
+                        <p class="card-text">Manage student records, view their theses and academic progress.</p>
+                        <a href="/students" class="btn btn-primary">View Students</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-3">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Teachers</h5>
+                        <p class="card-text">Manage teacher profiles and their supervised theses.</p>
+                        <a href="/teachers" class="btn btn-primary">View Teachers</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-3">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Theses</h5>
+                        <p class="card-text">View and manage graduation theses, applications, and reviews.</p>
+                        <a href="/theses" class="btn btn-primary">View Theses</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- <div class="row">
+            <div class="col-md-6 mb-3">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Recent Thesis Applications</h5>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${recentApplications != null and !recentApplications.empty}">
+                            <div class="list-group">
+                                <a th:each="application : ${recentApplications}"
+                                   th:href="@{/theses/applications/{id}(id=${application.id})}"
+                                   class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1" th:text="${application.title}">Title</h6>
+                                        <small th:text="${application.status}">Status</small>
+                                    </div>
+                                    <p class="mb-1" th:text="${application.student?.name}">Student Name</p>
+                                </a>
+                            </div>
+                        </div>
+                        <p th:if="${recentApplications == null or recentApplications.empty}" 
+                           class="text-muted mb-0">No recent applications</p>
+                    </div>
+                </div>
+            </div> -->
+            
+            <!-- <div class="col-md-6 mb-3">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Upcoming Defenses</h5>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${upcomingDefenses != null and !upcomingDefenses.empty}">
+                            <div class="list-group">
+                                <a th:each="defense : ${upcomingDefenses}"
+                                   th:href="@{/theses/defenses/{id}(id=${defense.id})}"
+                                   class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1" th:text="${defense.thesis?.title}">Thesis Title</h6>
+                                        <small th:text="${#temporals.format(defense.date, 'dd-MM-yyyy')}">Date</small>
+                                    </div>
+                                    <p class="mb-1" th:text="${defense.thesis?.student?.name}">Student Name</p>
+                                </a>
+                            </div>
+                        </div>
+                        <p th:if="${upcomingDefenses == null or upcomingDefenses.empty}" 
+                           class="text-muted mb-0">No upcoming defenses</p>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+    </div>
+
+    <footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

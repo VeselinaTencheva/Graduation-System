@@ -8,11 +8,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
-public class UserController {
+public class UserApiController {
     
     private final UserService userService;
 
-    public UserController(UserService userService) {
+    public UserApiController(UserService userService) {
         this.userService = userService;
     }
 

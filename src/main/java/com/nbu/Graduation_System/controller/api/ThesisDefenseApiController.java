@@ -12,11 +12,11 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/api/thesis-defenses")
-public class ThesisDefenseController {
+public class ThesisDefenseApiController {
     
     private final ThesisDefenseService thesisDefenseService;
 
-    public ThesisDefenseController(ThesisDefenseService thesisDefenseService) {
+    public ThesisDefenseApiController(ThesisDefenseService thesisDefenseService) {
         this.thesisDefenseService = thesisDefenseService;
     }
 
