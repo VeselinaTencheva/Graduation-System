@@ -1,6 +1,7 @@
 package com.nbu.Graduation_System.viewmodel.student;
 
-import com.nbu.Graduation_System.dto.department.DepartmentDto;
+import com.nbu.Graduation_System.viewmodel.department.DepartmentViewModel;
+import com.nbu.Graduation_System.viewmodel.thesis_application.ThesisApplicationViewModel;
 import com.nbu.Graduation_System.viewmodel.user.UserViewModel;
 
 import lombok.AllArgsConstructor;
@@ -23,5 +24,7 @@ public class StudentViewModel extends UserViewModel {
     private String facultyNumber;
 
     @NotNull
-    private DepartmentDto department;
+    private DepartmentViewModel department;
+
+    private ThesisApplicationViewModel thesisApplication;
 }

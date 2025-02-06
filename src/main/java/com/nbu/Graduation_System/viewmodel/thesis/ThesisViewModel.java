@@ -32,9 +32,6 @@ public class ThesisViewModel {
     @NotNull(message = "Thesis application is required")
     private ThesisApplicationViewModel thesisApplication;
 
-    @NotNull(message = "Supervisor is required")
-    private TeacherViewModel supervisor;
-
     @NotNull(message = "Status is required")
     private String status;
 
@@ -44,4 +41,9 @@ public class ThesisViewModel {
     public StudentViewModel getStudent() {
         return thesisApplication != null ? thesisApplication.getStudent() : null;
     }
+
+    public TeacherViewModel getSupervisor() {
+        return thesisApplication != null ? thesisApplication.getSupervisor() : null;
+    }
+
 }

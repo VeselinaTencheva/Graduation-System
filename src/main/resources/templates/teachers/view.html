@@ -9,8 +9,18 @@
         <div th:replace="fragments/layout :: message"></div>
         
         <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Teacher Details</h3>
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="card-title mb-0">Teacher Details</h3>
+                <div class="btn-group">
+                    <a th:href="@{/teachers/{id}/edit(id=${teacher.id})}" class="btn btn-warning">Edit</a>
+                    <form th:action="@{/teachers/{id}/delete(id=${teacher.id})}" 
+                          method="post" style="display: inline;">
+                        <button type="submit" class="btn btn-danger"
+                                onclick="return confirm('Are you sure you want to delete this teacher?')">
+                            Delete
+                        </button>
+                    </form>
+                </div>
             </div>
             <div class="card-body">
                 <div class="row mb-3">
@@ -29,17 +39,28 @@
                     <div class="col-sm-3"><strong>Academic Title:</strong></div>
                     <div class="col-sm-9" th:text="${teacher.academicTitle}"></div>
                 </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Department:</strong></div>
+                    <div class="col-sm-9">
+                        <a th:if="${teacher.department != null}" 
+                           th:href="@{'/departments/'+${teacher.department.id}}" 
+                           th:text="${teacher.department.type}"></a>
+                    </div>
+                </div>
+                <div class="row mb-3" th:if="${!teacher.supervisedTheses.empty}">
+                    <div class="col-sm-3"><strong>Supervised Theses:</strong></div>
+                    <div class="col-sm-9">
+                        <ul class="list-unstyled">
+                            <li th:each="thesis : ${teacher.supervisedTheses}">
+                                <a th:href="@{'/theses/'+${thesis.id}}" 
+                                   th:text="${thesis.title}"></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-            <div class="card-footer">
-                <a th:href="@{/teachers/{id}/edit(id=${teacher.id})}" class="btn btn-warning">Edit</a>
+            <div class="card-footer text-end">
                 <a th:href="@{/teachers}" class="btn btn-secondary">Back to List</a>
-                <form th:action="@{/teachers/{id}/delete(id=${teacher.id})}" 
-                      method="post" style="display: inline;">
-                    <button type="submit" class="btn btn-danger"
-                            onclick="return confirm('Are you sure you want to delete this teacher?')">
-                        Delete
-                    </button>
-                </form>
             </div>
         </div>
     </div>

@@ -1,8 +1,8 @@
 package com.nbu.Graduation_System.dto.thesis;
 
-import com.nbu.Graduation_System.entity.ThesisApplication;
-import com.nbu.Graduation_System.entity.ThesisDefense;
-import com.nbu.Graduation_System.entity.ThesisReview;
+import com.nbu.Graduation_System.dto.thesis_application.ThesisApplicationDto;
+import com.nbu.Graduation_System.dto.thesis_defense.ThesisDefenseDto;
+import com.nbu.Graduation_System.dto.thesis_review.ThesisReviewDto;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
@@ -19,9 +19,9 @@ public class ThesisDto {
     // @Size(min = 5, max = 100, message="Min 5, Max 100")
     private String content;
 
-    private ThesisApplication thesisApplication;
+    private ThesisApplicationDto thesisApplication;
     
-    private ThesisReview review;
+    private ThesisReviewDto review;
     
-    private ThesisDefense defense;
+    private ThesisDefenseDto defense;
 }

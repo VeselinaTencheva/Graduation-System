@@ -1,9 +1,9 @@
 package com.nbu.Graduation_System.dto.thesis_application;
 
 
-import com.nbu.Graduation_System.viewmodel.student.StudentViewModel;
-import com.nbu.Graduation_System.viewmodel.teacher.TeacherViewModel;
-import com.nbu.Graduation_System.viewmodel.thesis.ThesisViewModel;
+import com.nbu.Graduation_System.dto.student.StudentDto;
+import com.nbu.Graduation_System.dto.teacher.TeacherDto;
+import com.nbu.Graduation_System.dto.thesis.ThesisDto;
 import lombok.Data;
 
 import jakarta.validation.constraints.NotBlank;
@@ -32,11 +32,11 @@ public class ThesisApplicationDto {
     private String technologies;
 
     @NotNull
-    private ThesisViewModel thesis;
+    private ThesisDto thesis;
 
     @NotNull
-    private StudentViewModel student;
+    private StudentDto student;
 
     @NotNull
-    private TeacherViewModel supervisor;
+    private TeacherDto supervisor;
 }

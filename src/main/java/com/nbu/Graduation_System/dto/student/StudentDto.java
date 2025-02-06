@@ -1,6 +1,8 @@
 package com.nbu.Graduation_System.dto.student;
 
 import com.nbu.Graduation_System.dto.department.DepartmentDto;
+import com.nbu.Graduation_System.dto.thesis_application.ThesisApplicationDto;
+
 import com.nbu.Graduation_System.dto.user.UserDto;
 
 import lombok.Data;
@@ -18,4 +20,6 @@ public class StudentDto extends UserDto {
 
     @NotNull
     private DepartmentDto department;
+
+    private ThesisApplicationDto thesisApplication;
 }
