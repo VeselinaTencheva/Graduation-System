@@ -14,7 +14,14 @@ public class MapperUtil {
 
     @Bean
     public ModelMapper getModelMapper() {
-        return new ModelMapper();
+        ModelMapper modelMapper = new ModelMapper();
+        
+        // Configure to handle Student <-> ThesisApplication circular reference
+        modelMapper.getConfiguration()
+            .setAmbiguityIgnored(true)
+            .setPreferNestedProperties(false);
+            
+        return modelMapper;
     }
 
     public <S, T> List<T> mapList(List<S> source, Class<T> targetClass) {

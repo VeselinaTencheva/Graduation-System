@@ -18,4 +18,8 @@ public class TeacherDto extends UserDto {
 
     @NotNull
     private DepartmentDto department;
+
+    private String supervisedThesesNames;
+    private String thesisDefensesNames;
+    
 }

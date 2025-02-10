@@ -47,20 +47,22 @@
                            th:text="${teacher.department.type}"></a>
                     </div>
                 </div>
-                <div class="row mb-3" th:if="${!teacher.supervisedTheses.empty}">
+                <div class="row mb-3">
                     <div class="col-sm-3"><strong>Supervised Theses:</strong></div>
                     <div class="col-sm-9">
-                        <ul class="list-unstyled">
-                            <li th:each="thesis : ${teacher.supervisedTheses}">
-                                <a th:href="@{'/theses/'+${thesis.id}}" 
-                                   th:text="${thesis.title}"></a>
-                            </li>
-                        </ul>
+                        <a 
+                           th:href="@{'/thesis-applications/supervised-by/'+${teacher.id}}" 
+                           th:text="${teacher.supervisedThesesNames}"></a>
                     </div>
                 </div>
-            </div>
-            <div class="card-footer text-end">
-                <a th:href="@{/teachers}" class="btn btn-secondary">Back to List</a>
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Thesis Defenses:</strong></div>
+                    <div class="col-sm-9">
+                        <a 
+                           th:href="@{'/thesis-defenses/teacher/'+${teacher.id}}" 
+                           th:text="${teacher.thesisDefensesNames}"></a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

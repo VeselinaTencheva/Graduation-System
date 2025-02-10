@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/layout :: header('Thesis Details')">
+<head th:replace="fragments/layout :: header('Thesis Application Details')">
 </head>
 <body>
     <nav th:replace="fragments/layout :: navigation"></nav>
@@ -10,13 +10,13 @@
         
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h3 class="card-title mb-0">Thesis Details</h3>
+                <h3 class="card-title mb-0">Thesis Application Details</h3>
                 <div class="btn-group">
-                    <a th:href="@{/theses/{id}/edit(id=${thesis.id})}" class="btn btn-warning">Edit</a>
-                    <form th:action="@{/theses/{id}/delete(id=${thesis.id})}" 
+                    <a th:href="@{/thesis-applications/{id}/edit(id=${thesisApp.id})}" class="btn btn-warning">Edit</a>
+                    <form th:action="@{/thesis-applications/{id}/delete(id=${thesisApp.id})}" 
                           method="post" style="display: inline;">
                         <button type="submit" class="btn btn-danger"
-                                onclick="return confirm('Are you sure you want to delete this thesis?')">
+                                onclick="return confirm('Are you sure you want to delete this thesis application?')">
                             Delete
                         </button>
                     </form>
@@ -25,35 +25,39 @@
             <div class="card-body">
                 <div class="row mb-3">
                     <div class="col-sm-3"><strong>ID:</strong></div>
-                    <div class="col-sm-9" th:text="${thesis.id}"></div>
+                    <div class="col-sm-9" th:text="${thesisApp.id}"></div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-sm-3"><strong>Title:</strong></div>
-                    <div class="col-sm-9" th:text="${thesis.title}"></div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-sm-3"><strong>Description:</strong></div>
-                    <div class="col-sm-9" th:text="${thesis.content}"></div>
+                    <div class="col-sm-9" th:text="${thesisApp.title}"></div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-sm-3"><strong>Student:</strong></div>
                     <div class="col-sm-9">
-                        <a th:if="${thesis.getStudent()}" 
-                           th:href="@{'/students/'+${thesis.getStudent().id}}" 
-                           th:text="${thesis.getStudent().name}" />
+                        <a th:if="${thesisApp.student}" 
+                           th:href="@{'/students/'+${thesisApp.student.id}}" 
+                           th:text="${thesisApp.student.name}" />
                     </div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-sm-3"><strong>Supervisor:</strong></div>
                     <div class="col-sm-9">
-                        <a th:if="${thesis.getSupervisor()}" 
-                           th:href="@{'/teachers/'+${thesis.getSupervisor().id}}" 
-                           th:text="${thesis.getSupervisor().name}"></a>
+                        <a th:if="${thesisApp.supervisor}" 
+                           th:href="@{'/teachers/'+${thesisApp.supervisor.id}}" 
+                           th:text="${thesisApp.supervisor.name}"></a>
                     </div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-sm-3"><strong>Status:</strong></div>
-                    <div class="col-sm-9" th:text="${thesis.status}"></div>
+                    <div class="col-sm-9" th:text="${thesisApp.status}"></div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Objective:</strong></div>
+                    <div class="col-sm-9" th:text="${thesisApp.objective}"></div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Created At:</strong></div>
+                    <div class="col-sm-9" th:text="${#temporals.format(thesisApp.submissionDate, 'dd-MM-yyyy HH:mm')}"></div>
                 </div>
             </div>
         </div>

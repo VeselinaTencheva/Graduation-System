@@ -1,8 +1,8 @@
 package com.nbu.Graduation_System.controller.mvc;
 
-import com.nbu.Graduation_System.dto.teacher.TeacherDto;
 import com.nbu.Graduation_System.service.teacher.TeacherService;
 import com.nbu.Graduation_System.util.MapperUtil;
+import com.nbu.Graduation_System.viewmodel.teacher.TeacherViewModel;
 
 import lombok.AllArgsConstructor;
 
@@ -22,16 +22,16 @@ public class TeacherController {
 
     @GetMapping
     public String listTeachers(Model model) {
-        List<TeacherDto> teachers = mapperUtil
-                .mapList(this.teacherService.findAll(), TeacherDto.class);
+        List<TeacherViewModel> teachers = mapperUtil
+                .mapList(this.teacherService.findAll(), TeacherViewModel.class);
         model.addAttribute("teachers", teachers);
         return "/teachers/list";
     }
 
     @GetMapping("/{id}")
     public String viewTeacher(@PathVariable Long id, Model model) {
-        TeacherDto teacher = mapperUtil.getModelMapper().map(
-                teacherService.findById(id), TeacherDto.class);
+        TeacherViewModel teacher = mapperUtil.getModelMapper().map(
+                teacherService.findById(id), TeacherViewModel.class);
         model.addAttribute("teacher", teacher);
         return "/teachers/view";
     }

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: header('View Thesis Defense')">
+</head>
+<body>
+    <nav th:replace="fragments/layout :: navigation"></nav>
+    
+    <div class="container">
+        <div th:replace="fragments/layout :: message"></div>
+
+        <h2>Thesis Defense Details</h2>
+
+        <div class="card">
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Thesis:</strong></div>
+                    <div class="col-sm-9" th:text="${defense.thesis.title}"></div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Defense Date:</strong></div>
+                    <div class="col-sm-9" th:text="${#temporals.format(defense.defenseDate, 'dd-MM-yyyy HH:mm')}"></div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Grade:</strong></div>
+                    <div class="col-sm-9" th:text="${defense.grade}"></div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Committee Members:</strong></div>
+                    <div class="col-sm-9">
+                        <span th:each="member, iterStat : ${defense.committeeMembers}">
+                            <span th:text="${member.academicTitle}"></span>
+                            <span th:if="${!iterStat.last}">, </span>
+                        </span>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Student:</strong></div>
+                    <div class="col-sm-9" th:text="${defense.thesis.thesisApplication.student.facultyNumber}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

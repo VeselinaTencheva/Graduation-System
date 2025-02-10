@@ -23,4 +23,7 @@ public class TeacherViewModel extends UserViewModel{
 
     @NotNull
     private DepartmentDto department;
+
+    private String supervisedThesesNames;
+    private String thesisDefensesNames;
 }

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: header('Thesis Defenses')">
+</head>
+<body>
+    <nav th:replace="fragments/layout :: navigation"></nav>
+    
+    <div class="container">
+        <div th:replace="fragments/layout :: message"></div>
+
+        <h2>Thesis Defenses</h2>
+
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Thesis Title</th>
+                        <th>Defense Date</th>
+                        <th>Grade</th>
+                        <th>Committee Members</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="defense : ${defenses}" 
+                        th:onclick="'window.location.href=\'' + @{/thesis-defenses/{id}(id=${defense.id})} + '\''" 
+                        style="cursor: pointer;"
+                        class="table-row-link">
+                        <td th:text="${defense.id}"></td>
+                        <td th:text="${defense.thesis.title}"></td>
+                        <td th:text="${#temporals.format(defense.defenseDate, 'dd-MM-yyyy HH:mm')}"></td>
+                        <td th:text="${defense.grade}"></td>
+                        <td>
+                            <span th:each="member, iterStat : ${defense.committeeMembers}">
+                                <span th:text="${member.academicTitle}"></span>
+                                <span th:if="${!iterStat.last}">, </span>
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

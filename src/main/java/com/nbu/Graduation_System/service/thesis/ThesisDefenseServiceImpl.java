@@ -33,6 +33,11 @@ public class ThesisDefenseServiceImpl implements ThesisDefenseService {
     }
 
     @Override
+    public List<ThesisDefenseDto> findByTeacherId(Long teacherId) {
+        return mapperUtil.mapList(thesisDefenseRepository.findByTeacherId(teacherId), ThesisDefenseDto.class);
+    }
+
+    @Override
     public ThesisDefenseDto save(CreateThesisDefenseDto defenseDto) {
         ThesisDefense defense = mapperUtil.getModelMapper().map(defenseDto, ThesisDefense.class);
         defense = thesisDefenseRepository.save(defense);

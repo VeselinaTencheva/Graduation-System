@@ -1,20 +1,21 @@
 // package com.nbu.Graduation_System.controller.api;
 
-// import com.nbu.Graduation_System.dto.TeacherDto;
+// import com.nbu.Graduation_System.dto.teacher.TeacherDto;
+// import com.nbu.Graduation_System.dto.thesis_application.ThesisApplicationDto;
 // import com.nbu.Graduation_System.service.teacher.TeacherService;
+// import com.nbu.Graduation_System.service.thesis.ThesisApplicationService;
+// import lombok.AllArgsConstructor;
 // import org.springframework.http.ResponseEntity;
 // import org.springframework.web.bind.annotation.*;
 // import java.util.List;
 
 // @RestController
 // @RequestMapping("/api/teachers")
+// @AllArgsConstructor
 // public class TeacherApiController {
     
 //     private final TeacherService teacherService;
-
-//     public TeacherApiController(TeacherService teacherService) {
-//         this.teacherService = teacherService;
-//     }
+//     private final ThesisApplicationService thesisApplicationService;
 
 //     @GetMapping
 //     public ResponseEntity<List<TeacherDto>> getAllTeachers() {
@@ -26,6 +27,11 @@
 //         return teacherService.findById(id)
 //                 .map(ResponseEntity::ok)
 //                 .orElse(ResponseEntity.notFound().build());
+//     }
+
+//     @GetMapping("/{id}/theses")
+//     public ResponseEntity<List<ThesisApplicationDto>> getTeacherTheses(@PathVariable Long id) {
+//         return ResponseEntity.ok(thesisApplicationService.findBySupervisorId(id));
 //     }
 
 //     @PostMapping

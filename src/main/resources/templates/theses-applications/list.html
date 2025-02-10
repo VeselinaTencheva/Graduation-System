@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: header('Thesis Applications')">
+</head>
+<body>
+    <nav th:replace="fragments/layout :: navigation"></nav>
+    
+    <div class="container">
+        <div th:replace="fragments/layout :: message"></div>
+        
+        <h2>Thesis Applications</h2>
+        <div th:replace="fragments/layout :: tableActions(@{/thesis-applications/new})"></div>
+        
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Student</th>
+                        <th>Supervisor</th>
+                        <th>Status</th>
+                        <th>Submission Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="thesisApp : ${thesesApplications}" 
+                        th:onclick="'window.location.href=\'' + @{/thesis-applications/{id}(id=${thesisApp.id})} + '\''"
+                        style="cursor: pointer;"
+                        class="table-row-link">
+                        <td th:text="${thesisApp.id}"></td>
+                        <td th:text="${thesisApp.title}"></td>
+                        <td>
+                            <span th:if="${thesisApp.getStudent() != null}" 
+                                  th:text="${thesisApp.getStudent().name}">
+                            </span>
+                        </td>
+                        <td>
+                            <span th:if="${thesisApp.getSupervisor() != null}"
+                                  th:text="${thesisApp.getSupervisor().name}">
+                            </span>
+                        </td>
+                        <td th:text="${thesisApp.status}"></td>
+                        <td th:text="${#temporals.format(thesisApp.submissionDate, 'dd-MM-yyyy HH:mm')}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

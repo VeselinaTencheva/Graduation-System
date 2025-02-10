@@ -33,6 +33,11 @@ public class ThesisApplicationServiceImpl implements ThesisApplicationService {
     }
 
     @Override
+    public List<ThesisApplicationDto> findBySupervisorId(Long id) {
+        return mapperUtil.mapList(thesisApplicationRepository.findBySupervisorId(id), ThesisApplicationDto.class);
+    }
+
+    @Override
     public ThesisApplicationDto save(CreateThesisApplicationDto applicationDto) {
         ThesisApplication application = mapperUtil.getModelMapper().map(applicationDto, ThesisApplication.class);
         application = thesisApplicationRepository.save(application);
