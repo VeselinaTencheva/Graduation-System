@@ -40,7 +40,13 @@
                                   th:text="${thesisApp.getSupervisor().name}">
                             </span>
                         </td>
-                        <td th:text="${thesisApp.status}"></td>
+                        <td>
+                            <span th:switch="${thesisApp.status}">
+                                <span th:case="${statusType[0]}" class="badge bg-primary">Submitted</span>
+                                <span th:case="${statusType[1]}" class="badge bg-success">Accepted</span>
+                                <span th:case="${statusType[2]}" class="badge bg-danger">Rejected</span>
+                            </span>
+                        </td>
                         <td th:text="${#temporals.format(thesisApp.submissionDate, 'dd-MM-yyyy HH:mm')}"></td>
                     </tr>
                 </tbody>

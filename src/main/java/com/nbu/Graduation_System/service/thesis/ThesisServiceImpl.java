@@ -53,7 +53,6 @@ public class ThesisServiceImpl implements ThesisService {
     @Override
     public ThesisDto createFromApplication(ThesisApplication application) {
         Thesis thesis = new Thesis();
-        thesis.setTitle(application.getTitle());
         thesis.setThesisApplication(application);
         thesis = thesisRepository.save(thesis);
         return mapperUtil.getModelMapper().map(thesis, ThesisDto.class);

@@ -3,6 +3,7 @@ package com.nbu.Graduation_System.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import java.util.Set;
 
 @Entity
 @Data
@@ -15,6 +16,6 @@ public class Student extends User {
     @JoinColumn(name = "department_id")
     private Department department;
     
-    @OneToOne(mappedBy = "student")
-    private ThesisApplication currentThesisApplication;
+    @OneToMany(mappedBy = "student")
+    private Set<ThesisApplication> thesisApplications;
 }

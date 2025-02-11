@@ -4,6 +4,7 @@ package com.nbu.Graduation_System.dto.thesis_application;
 import com.nbu.Graduation_System.dto.student.StudentDto;
 import com.nbu.Graduation_System.dto.teacher.TeacherDto;
 import com.nbu.Graduation_System.dto.thesis.ThesisDto;
+import com.nbu.Graduation_System.entity.enums.ThesisApplicationStatusType;
 import lombok.Data;
 
 import jakarta.validation.constraints.NotBlank;
@@ -39,4 +40,7 @@ public class ThesisApplicationDto {
 
     @NotNull
     private TeacherDto supervisor;
+
+    @NotNull
+    private ThesisApplicationStatusType status;
 }

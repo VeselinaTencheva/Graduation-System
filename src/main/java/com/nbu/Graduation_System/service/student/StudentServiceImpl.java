@@ -31,10 +31,25 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    public List<StudentDto> findAllEligibleForThesisApplication() {
+        return mapperUtil.mapList(studentRepository.findAllEligibleForThesisApplication(), StudentDto.class);
+    }
+
+    @Override
     public StudentDto save(CreateStudentDto studentDto) {
         Student student = mapperUtil.getModelMapper().map(studentDto, Student.class);
         student = studentRepository.save(student);
         return mapperUtil.getModelMapper().map(student, StudentDto.class);
+    }
+
+    @Override
+    public boolean existsById(Long id) {
+        return studentRepository.existsById(id);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        studentRepository.deleteById(id);
     }
 
     // @Override
@@ -48,16 +63,6 @@ public class StudentServiceImpl implements StudentService {
     //             );
     // }
 
-
-    @Override
-    public boolean existsById(Long id) {
-        return studentRepository.existsById(id);
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        studentRepository.deleteById(id);
-    }
 
     // @Override
     // public Optional<StudentDto> findByFacultyNumber(String facultyNumber) {

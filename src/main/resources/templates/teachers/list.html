@@ -30,7 +30,7 @@
                         <td th:text="${teacher.name}"></td>
                         <td th:text="${teacher.email}"></td>
                         <td th:text="${teacher.academicTitle}"></td>
-                        <td th:text="${teacher.department != null ? teacher.department.type : ''}"></td>
+                        <td th:text="${teacher.department != null ? teacher.department.type.name : ''}"></td>
                     </tr>
                 </tbody>
             </table>

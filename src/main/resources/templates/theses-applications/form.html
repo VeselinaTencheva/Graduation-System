@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: header('New Thesis Application')">
+</head>
+<body>
+    <nav th:replace="fragments/layout :: navigation"></nav>
+    
+    <div class="container mt-4">
+        <div th:replace="fragments/layout :: message"></div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title mb-0">New Thesis Application</h3>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/thesis-applications}" method="post" th:object="${thesisApp}" class="needs-validation" novalidate>
+                    <!-- Global error messages -->
+                    <div class="alert alert-danger mb-4" th:if="${error}" th:text="${error}"></div>
+                
+                    <div class="mb-3">
+                        <label for="studentId" class="form-label">Student *</label>
+                        <select class="form-select" id="studentId" th:field="*{studentId}" 
+                                th:errorclass="is-invalid">
+                            <option value="">Select a student</option>
+                            <option th:each="student : ${students}"
+                                    th:value="${student.id}"
+                                    th:text="${student.name + ' (' + student.facultyNumber + ')'}"></option>
+                        </select>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('studentId')}" th:errors="*{studentId}">Please select a student</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Title *</label>
+                        <input type="text" class="form-control" id="title" th:field="*{title}"
+                               th:errorclass="is-invalid">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Please enter a valid title</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="objective" class="form-label">Objective *</label>
+                        <textarea class="form-control" id="objective" th:field="*{objective}" rows="3"
+                                  th:errorclass="is-invalid"></textarea>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('objective')}" th:errors="*{objective}">Please enter a valid objective</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="tasks" class="form-label">Tasks *</label>
+                        <textarea class="form-control" id="tasks" th:field="*{tasks}" rows="3"
+                                  th:errorclass="is-invalid"></textarea>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('tasks')}" th:errors="*{tasks}">Please enter valid tasks</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="technologies" class="form-label">Technologies *</label>
+                        <textarea class="form-control" id="technologies" th:field="*{technologies}" rows="2"
+                                  th:errorclass="is-invalid"></textarea>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('technologies')}" th:errors="*{technologies}">Please enter valid technologies</div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">Submit Application</button>
+                        <a th:href="@{/thesis-applications}" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

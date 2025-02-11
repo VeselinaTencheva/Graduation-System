@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import jakarta.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 
 import com.nbu.Graduation_System.entity.base.BaseEntity;
 
@@ -13,23 +14,25 @@ import com.nbu.Graduation_System.entity.base.BaseEntity;
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "theses")
 public class Thesis extends BaseEntity {
-
-    @NotBlank
-    // @Size(min = 5, max = 20, message="Min 5, Max 20")
-    private String title;
     
     @Column(columnDefinition = "TEXT")
     @NotBlank
-    // @Size(min = 5, max = 100, message="Min 5, Max 100")
     private String content;
     
-    @OneToOne(optional = false)
-    @JoinColumn(name = "thesis_application_id", nullable = false)
+    private LocalDateTime uploadDate;
+    
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "thesis_application_id")
     private ThesisApplication thesisApplication;
     
-    @OneToOne(mappedBy = "thesis")
+    @OneToOne(mappedBy = "thesis", cascade = CascadeType.ALL, orphanRemoval = true)
     private ThesisReview review;
     
-    @OneToOne(mappedBy = "thesis")
+    @OneToOne(mappedBy = "thesis", cascade = CascadeType.ALL, orphanRemoval = true)
     private ThesisDefense defense;
+    
+    // Delegate title to thesis application
+    public String getTitle() {
+        return thesisApplication != null ? thesisApplication.getTitle() : null;
+    }
 }

@@ -11,10 +11,9 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h3 class="card-title mb-0">Teacher Details</h3>
-                <div class="btn-group">
+                <div class="d-flex gap-2">
                     <a th:href="@{/teachers/{id}/edit(id=${teacher.id})}" class="btn btn-warning">Edit</a>
-                    <form th:action="@{/teachers/{id}/delete(id=${teacher.id})}" 
-                          method="post" style="display: inline;">
+                    <form th:action="@{/teachers/{id}/delete(id=${teacher.id})}" method="post">
                         <button type="submit" class="btn btn-danger"
                                 onclick="return confirm('Are you sure you want to delete this teacher?')">
                             Delete
@@ -44,7 +43,7 @@
                     <div class="col-sm-9">
                         <a th:if="${teacher.department != null}" 
                            th:href="@{'/departments/'+${teacher.department.id}}" 
-                           th:text="${teacher.department.type}"></a>
+                           th:text="${teacher.department.type.name}"></a>
                     </div>
                 </div>
                 <div class="row mb-3">

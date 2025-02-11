@@ -1,47 +1,118 @@
 package com.nbu.Graduation_System.controller.mvc;
 
+import com.nbu.Graduation_System.dto.teacher.TeacherDto;
+import com.nbu.Graduation_System.dto.thesis_application.CreateThesisApplicationDto;
+import com.nbu.Graduation_System.entity.enums.ThesisApplicationStatusType;
+import com.nbu.Graduation_System.service.student.StudentService;
+import com.nbu.Graduation_System.service.teacher.TeacherService;
 import com.nbu.Graduation_System.service.thesis.ThesisApplicationService;
 import com.nbu.Graduation_System.util.MapperUtil;
 import com.nbu.Graduation_System.viewmodel.thesis_application.ThesisApplicationViewModel;
+import com.nbu.Graduation_System.viewmodel.thesis_application.CreateThesisApplicationViewModel;
+import com.nbu.Graduation_System.viewmodel.student.StudentViewModel;
+import com.nbu.Graduation_System.viewmodel.teacher.TeacherViewModel;
+
+import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
-import lombok.AllArgsConstructor;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-
 @Controller
-@AllArgsConstructor
 @RequestMapping("/thesis-applications")
+@AllArgsConstructor
 public class ThesisApplicationController {
-
     private final ThesisApplicationService thesisApplicationService;
+    private final StudentService studentService;
+    private final TeacherService teacherService;
     private final MapperUtil mapperUtil;
-
-   
+    
     @GetMapping
     public String listThesesApplications(Model model) {
-        List<ThesisApplicationViewModel> thesesApplications = mapperUtil
-                .mapList(this.thesisApplicationService.findAll(), ThesisApplicationViewModel.class);
-        model.addAttribute("thesesApplications", thesesApplications);
+        List<ThesisApplicationViewModel> applications = mapperUtil.mapList(
+                thesisApplicationService.findAll(), ThesisApplicationViewModel.class);
+        model.addAttribute("thesesApplications", applications);
+        model.addAttribute("statusType", ThesisApplicationStatusType.values());
         return "theses-applications/list";
     }
 
     @GetMapping("/{id}")
-    public String viewThesisApplication(@PathVariable Long id, Model model) {
-        model.addAttribute("thesisApp", mapperUtil.getModelMapper().map(
-                thesisApplicationService.findById(id), ThesisApplicationViewModel.class));
+    public String viewThesisApplication(@PathVariable("id") Long id, Model model) {
+        ThesisApplicationViewModel thesisApp = mapperUtil.getModelMapper().map(
+                thesisApplicationService.findById(id), ThesisApplicationViewModel.class);
+        model.addAttribute("thesisApp", thesisApp);
+        model.addAttribute("statusType", ThesisApplicationStatusType.values());
         return "theses-applications/view";
     }
 
-    @GetMapping("supervised-by/{id}")
-    public String listThesesApplicationsBySupervisorId(@PathVariable Long id, Model model) {
-        List<ThesisApplicationViewModel> applications = mapperUtil.mapList(
-                thesisApplicationService.findBySupervisorId(id), ThesisApplicationViewModel.class);
-        model.addAttribute("thesesApplications", applications);
-        return "theses-applications/list";
+    @GetMapping("/new")
+    public String newThesisApplication(Model model) {
+        model.addAttribute("thesisApp", new CreateThesisApplicationViewModel());
+        model.addAttribute("students", mapperUtil.mapList(studentService.findAllEligibleForThesisApplication(), StudentViewModel.class));
+        return "theses-applications/form";
+    }
+
+    @PostMapping
+    public String createThesisApplication(
+            @Valid @ModelAttribute("thesisApp") CreateThesisApplicationViewModel thesisApp,
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes,
+            Model model) {
+        
+        model.addAttribute("students", mapperUtil.mapList(studentService.findAllEligibleForThesisApplication(), StudentViewModel.class));
+        
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("error", "Please correct the errors below");
+            return "theses-applications/form";
+        }
+
+        try {
+            // For now, just use a default teacher
+            TeacherViewModel teacher = mapperUtil.mapList(teacherService.findAll(), TeacherViewModel.class).get(0);
+            
+            // Map to DTO and set additional fields
+            CreateThesisApplicationDto dto = mapperUtil.getModelMapper().map(thesisApp, CreateThesisApplicationDto.class);
+            // dto.setStudentId(thesisApp.getStudentId());
+            dto.setSupervisor(mapperUtil.getModelMapper().map(teacher, TeacherDto.class));
+            dto.setDepartment(teacher.getDepartment());
+            
+            thesisApplicationService.create(dto);
+            redirectAttributes.addFlashAttribute("success", "Thesis application submitted successfully!");
+            return "redirect:/thesis-applications";
+        } catch (Exception e) {
+            model.addAttribute("error", "Failed to submit thesis application: " + e.getMessage());
+            return "theses-applications/form";
+        }
+    }
+
+    @PostMapping("/{id}/approve")
+    public String approveThesisApplication(
+            @PathVariable("id") Long id,
+            RedirectAttributes redirectAttributes) {
+        try {
+            thesisApplicationService.approve(id);
+            redirectAttributes.addFlashAttribute("success", "Thesis application approved successfully!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Failed to approve thesis application: " + e.getMessage());
+        }
+        return "redirect:/thesis-applications/" + id;
+    }
+
+    @PostMapping("/{id}/reject")
+    public String rejectThesisApplication(
+            @PathVariable("id") Long id,
+            RedirectAttributes redirectAttributes) {
+        try {
+            thesisApplicationService.reject(id);
+            redirectAttributes.addFlashAttribute("success", "Thesis application rejected successfully!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Failed to reject thesis application: " + e.getMessage());
+        }
+        return "redirect:/thesis-applications/" + id;
     }
 
     // @GetMapping("by-student/{id}")

@@ -1,12 +1,8 @@
 package com.nbu.Graduation_System.viewmodel.thesis_application;
 
-import java.time.LocalDateTime;
-
-import com.nbu.Graduation_System.viewmodel.teacher.TeacherViewModel;
-import com.nbu.Graduation_System.viewmodel.thesis.ThesisViewModel;
-
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Size;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,16 +16,23 @@ import lombok.ToString;
 @Setter
 @ToString
 public class CreateThesisApplicationViewModel {
-    @NotNull(message = "Submission date cannot be null")
-    @PastOrPresent(message = "Submission date cannot be in the future")
-    private LocalDateTime submissionDate;
+    
+    @NotBlank(message = "Title is required")
+    @Size(min = 5, max = 50, message = "Title must be between 5 and 50 characters")
+    private String title;
 
-    @NotNull
-    private boolean isPositive;
+    @NotBlank(message = "Objective is required")
+    @Size(min = 20, max = 300, message = "Objective must be between 20 and 300 characters")
+    private String objective;
 
-    @NotNull
-    private TeacherViewModel reviewer;
+    @NotBlank(message = "Tasks are required")
+    @Size(min = 20, max = 300, message = "Tasks must be between 20 and 300 characters")
+    private String tasks;
 
-    @NotNull
-    private ThesisViewModel thesis;
+    @NotBlank(message = "Technologies are required")
+    @Size(min = 20, max = 300, message = "Technologies must be between 20 and 300 characters")
+    private String technologies;
+
+    @NotNull(message = "Student is required")
+    private Long studentId;
 }
