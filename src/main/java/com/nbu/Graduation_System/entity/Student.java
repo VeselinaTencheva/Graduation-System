@@ -10,12 +10,14 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "students")
 public class Student extends User {
-    private String facultyNumber;
-    
     @ManyToOne
     @JoinColumn(name = "department_id")
     private Department department;
     
     @OneToMany(mappedBy = "student")
     private Set<ThesisApplication> thesisApplications;
+
+    public String getFacultyNumber() {
+        return "F" + getId();
+    }
 }

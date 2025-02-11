@@ -74,12 +74,11 @@ public class DbInit implements CommandLineRunner {
         return teacherRepository.save(teacher);
     }
 
-    private Student createStudent(String name, String email, String facultyNumber, DepartmentType departmentType) {
+    private Student createStudent(String name, String email, DepartmentType departmentType) {
         Student student = new Student();
         student.setName(name);
         student.setEmail(email);
         student.setRole(UserRoleType.STUDENT);
-        student.setFacultyNumber(facultyNumber);
         student.setDepartment(departmentRepository.findByType(departmentType)
                 .orElseThrow(() -> new RuntimeException("Department not found: " + departmentType)));
         return studentRepository.save(student);
@@ -167,21 +166,18 @@ public class DbInit implements CommandLineRunner {
         Student aliceJohnson = createStudent(
             "Alice Johnson", 
             "alice.johnson@nbu.bg", 
-            "F12345",
             DepartmentType.COMPUTER_SCIENCE
         );
 
         Student bobWilson = createStudent(
             "Bob Wilson", 
             "bob.wilson@nbu.bg", 
-            "F12346",
             DepartmentType.INFORMATICS
         );
 
         Student carolClark = createStudent(
             "Carol Clark", 
             "carol.clark@nbu.bg", 
-            "F12347",
             DepartmentType.INFORMATION_TECHNOLOGIES
         );
 

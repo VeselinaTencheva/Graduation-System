@@ -1,16 +1,15 @@
 package com.nbu.Graduation_System.service.teacher;
 
-import com.nbu.Graduation_System.dto.teacher.*;
-import com.nbu.Graduation_System.dto.thesis_defense.ThesisDefenseDto;
+import com.nbu.Graduation_System.dto.teacher.CreateTeacherDto;
+import com.nbu.Graduation_System.dto.teacher.TeacherDto;
 import com.nbu.Graduation_System.entity.Teacher;
+import com.nbu.Graduation_System.entity.Department;
 import com.nbu.Graduation_System.repository.TeacherRepository;
-import com.nbu.Graduation_System.service.thesis.ThesisApplicationService;
-import com.nbu.Graduation_System.service.thesis.ThesisDefenseService;
+import com.nbu.Graduation_System.repository.DepartmentRepository;
+import com.nbu.Graduation_System.repository.UserRepository;
 import com.nbu.Graduation_System.util.MapperUtil;
-import com.nbu.Graduation_System.viewmodel.thesis_application.ThesisApplicationViewModel;
 
 import lombok.AllArgsConstructor;
-
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,33 +17,17 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class TeacherServiceImpl implements TeacherService {
-    
     private final TeacherRepository teacherRepository;
-    private final ThesisApplicationService thesisApplicationService;
-    private final ThesisDefenseService thesisDefenseService;
+    private final DepartmentRepository departmentRepository;
+    private final UserRepository userRepository;
     private final MapperUtil mapperUtil;
 
     @Override
     public TeacherDto findById(Long id) {
-        TeacherDto teacher = mapperUtil.getModelMapper().map(
+        return mapperUtil.getModelMapper().map(
                 teacherRepository.findById(id)
                         .orElseThrow(() -> new RuntimeException("Teacher with id=" + id + " not found!")),
                 TeacherDto.class);
-
-        // Map supervised thesis applications
-        final List<ThesisApplicationViewModel> supervisedTheses = mapperUtil.mapList(thesisApplicationService
-                .findBySupervisorId(id), ThesisApplicationViewModel.class);
-        teacher.setSupervisedThesesNames(String.join(", ", supervisedTheses.stream()
-                .map(ThesisApplicationViewModel::getTitle)
-                .toList()));
-
-        // Map thesis defenses
-        final List<ThesisDefenseDto> thesisDefenses = thesisDefenseService.findByTeacherId(id);
-        teacher.setThesisDefensesNames(String.join(", ", thesisDefenses.stream()
-                .map(defense -> defense.getThesis().getTitle())
-                .toList()));
-
-        return teacher;
     }
 
     @Override
@@ -54,13 +37,28 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public TeacherDto save(CreateTeacherDto teacherDto) {
+        if (userRepository.existsByEmail(teacherDto.getEmail())) {
+            throw new RuntimeException("Email already exists: " + teacherDto.getEmail());
+        }
+
         Teacher teacher = mapperUtil.getModelMapper().map(teacherDto, Teacher.class);
+        
+        
+        
+        // Set the department
+        Department department = departmentRepository.findById(teacherDto.getDepartmentId())
+            .orElseThrow(() -> new RuntimeException("Department not found with id: " + teacherDto.getDepartmentId()));
+        teacher.setDepartment(department);
+        
         teacher = teacherRepository.save(teacher);
         return mapperUtil.getModelMapper().map(teacher, TeacherDto.class);
     }
 
     @Override
     public void deleteById(Long id) {
+        if (!teacherRepository.existsById(id)) {
+            throw new RuntimeException("Teacher with id=" + id + " not found!");
+        }
         teacherRepository.deleteById(id);
     }
 

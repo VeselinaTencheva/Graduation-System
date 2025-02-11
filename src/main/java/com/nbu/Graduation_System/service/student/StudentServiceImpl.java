@@ -1,13 +1,17 @@
 package com.nbu.Graduation_System.service.student;
 
-import com.nbu.Graduation_System.dto.student.*;
+import com.nbu.Graduation_System.dto.student.CreateStudentDto;
+import com.nbu.Graduation_System.dto.student.StudentDto;
 import com.nbu.Graduation_System.entity.Student;
+import com.nbu.Graduation_System.entity.Department;
 import com.nbu.Graduation_System.repository.StudentRepository;
+import com.nbu.Graduation_System.repository.DepartmentRepository;
+import com.nbu.Graduation_System.repository.UserRepository;
 import com.nbu.Graduation_System.util.MapperUtil;
 
 import lombok.AllArgsConstructor;
-
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @AllArgsConstructor
@@ -15,9 +19,11 @@ import java.util.List;
 public class StudentServiceImpl implements StudentService {
     
     private final StudentRepository studentRepository;
+    private final DepartmentRepository departmentRepository;
+    private final UserRepository userRepository;
     private final MapperUtil mapperUtil;
 
-   @Override
+    @Override
     public StudentDto findById(Long id) {
         return mapperUtil.getModelMapper().map(
                 studentRepository.findById(id)
@@ -36,8 +42,27 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    public void deleteById(Long id) {
+        if (!studentRepository.existsById(id)) {
+            throw new RuntimeException("Student with id=" + id + " not found!");
+        }
+        studentRepository.deleteById(id);
+    }
+
+    @Override
     public StudentDto save(CreateStudentDto studentDto) {
+        if (userRepository.existsByEmail(studentDto.getEmail())) {
+            throw new RuntimeException("Email already exists: " + studentDto.getEmail());
+        }
+
         Student student = mapperUtil.getModelMapper().map(studentDto, Student.class);
+        
+        
+        // Set the department
+        Department department = departmentRepository.findById(studentDto.getDepartmentId())
+            .orElseThrow(() -> new RuntimeException("Department not found with id: " + studentDto.getDepartmentId()));
+        student.setDepartment(department);
+        
         student = studentRepository.save(student);
         return mapperUtil.getModelMapper().map(student, StudentDto.class);
     }
@@ -46,27 +71,4 @@ public class StudentServiceImpl implements StudentService {
     public boolean existsById(Long id) {
         return studentRepository.existsById(id);
     }
-
-    @Override
-    public void deleteById(Long id) {
-        studentRepository.deleteById(id);
-    }
-
-    // @Override
-    // public StudentDto updateMedicine(Medicine medicine, long id) {
-    //     return this.medicineRepository.findById(id)
-    //             .map(medicine1 -> {
-    //                 medicine1.setName(medicine.getName());
-    //                 return this.medicineRepository.save(medicine1);
-    //             }).orElseGet(() ->
-    //                     this.medicineRepository.save(medicine)
-    //             );
-    // }
-
-
-    // @Override
-    // public Optional<StudentDto> findByFacultyNumber(String facultyNumber) {
-    //     return studentRepository.findByFacultyNumber(facultyNumber)
-    //             .map(studentMapper::toDto);
-    // }
 }

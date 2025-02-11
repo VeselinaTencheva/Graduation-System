@@ -1,65 +1,76 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/layout :: header(${student.id} ? 'Edit Student' : 'New Student')">
+<head th:replace="fragments/layout :: header('New Student')">
 </head>
 <body>
     <nav th:replace="fragments/layout :: navigation"></nav>
     
     <div class="container">
-        <h2 th:text="${student.id} ? 'Edit Student' : 'New Student'"></h2>
+        <h2>New Student</h2>
         
-        <form th:action="${student.id} ? @{/students/{id}(id=${student.id})} : @{/students}"
-              th:object="${student}" method="post" class="needs-validation" novalidate>
+        <div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}">
+            Error message
+        </div>
+        
+        <form th:action="@{/students}" th:object="${student}" 
+              method="post" class="needs-validation">
             
             <div class="mb-3">
-                <label for="name" class="form-label">Name</label>
-                <input type="text" class="form-control" id="name" th:field="*{name}" required>
-                <div class="invalid-feedback">Name is required</div>
+                <label for="name" class="form-label">Name *</label>
+                <input type="text" class="form-control" th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'" 
+                       id="name" th:field="*{name}" required>
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
+                    Name is required
+                </div>
             </div>
             
             <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" th:field="*{email}" required>
-                <div class="invalid-feedback">Valid email is required</div>
+                <label for="email" class="form-label">Email *</label>
+                <input type="email" class="form-control" th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'"
+                       id="email" th:field="*{email}" required>
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">
+                    Valid email is required
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Password *</label>
+                <input type="password" class="form-control" th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'"
+                       id="password" th:field="*{password}" required>
+                <div class="form-text">
+                    Password must:
+                    <ul class="mb-0">
+                        <li>Be at least 8 characters long</li>
+                        <li>Contain at least one digit (0-9)</li>
+                        <li>Contain at least one lowercase letter (a-z)</li>
+                        <li>Contain at least one uppercase letter (A-Z)</li>
+                        <li>Contain at least one special character (@#$%^&+=)</li>
+                        <li>Not contain spaces</li>
+                    </ul>
+                </div>
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">
+                    Password is invalid
+                </div>
             </div>
             
             <div class="mb-3">
-                <label for="facultyNumber" class="form-label">Faculty Number</label>
-                <input type="text" class="form-control" id="facultyNumber" th:field="*{facultyNumber}" required>
-                <div class="invalid-feedback">Faculty number is required</div>
+                <label for="departmentId" class="form-label">Department *</label>
+                <select class="form-select" id="departmentId" th:field="*{departmentId}" 
+                        th:errorclass="is-invalid">
+                    <option value="">Select Department</option>
+                    <option th:each="dept : ${departments}"
+                            th:value="${dept.id}"
+                            th:text="${dept.type.name}">Department Name</option>
+                </select>
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('departmentId')}" th:errors="*{departmentId}">Please select a department</div>
             </div>
-            
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" th:field="*{password}"
-                       th:required="${!student.id}">
-                <div class="invalid-feedback">Password is required for new students</div>
-            </div>
-            
-            <div class="mb-3">
-                <button type="submit" class="btn btn-primary">Save</button>
-                <a th:href="@{/students}" class="btn btn-secondary">Cancel</a>
-            </div>
+
+            <button type="submit" class="btn btn-primary">Create Student</button>
+            <a th:href="@{/students}" class="btn btn-secondary">Cancel</a>
         </form>
     </div>
 
     <footer th:replace="fragments/layout :: footer"></footer>
-    
-    <script>
-    // Form validation
-    (function () {
-        'use strict'
-        var forms = document.querySelectorAll('.needs-validation')
-        Array.prototype.slice.call(forms).forEach(function (form) {
-            form.addEventListener('submit', function (event) {
-                if (!form.checkValidity()) {
-                    event.preventDefault()
-                    event.stopPropagation()
-                }
-                form.classList.add('was-validated')
-            }, false)
-        })
-    })()
-    </script>
+    <div th:replace="fragments/layout :: scripts"></div>
 </body>
 </html>
