@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/layout :: header('Departments')">
+<head>
+    <th:block th:replace="~{fragments/layout :: header('Departments')}"/>
 </head>
 <body>
-    <nav th:replace="fragments/layout :: navigation"></nav>
+    <nav th:replace="~{fragments/layout :: navigation}"></nav>
     
     <div class="container">
-        <div th:replace="fragments/layout :: message"></div>
+        <div th:replace="~{fragments/layout :: message}"></div>
         
-        <h2>Departments</h2>
-        <div th:replace="fragments/layout :: tableActions(@{/departments/new})"></div>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h2>Departments</h2>
+            <template th:replace="~{fragments/layout :: tableActions(@{/departments/new})}"></template>
+        </div>
         
         <div class="table-responsive">
             <table class="table table-striped table-hover">
@@ -35,6 +38,7 @@
         </div>
     </div>
 
-    <footer th:replace="fragments/layout :: footer"></footer>
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: scripts}"></div>
 </body>
 </html>

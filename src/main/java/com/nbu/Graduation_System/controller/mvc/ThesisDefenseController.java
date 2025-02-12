@@ -39,7 +39,7 @@ public class ThesisDefenseController {
     @GetMapping("/teacher/{id}")
     public String listDefensesByTeacherId(@PathVariable Long id, Model model) {
         List<ThesisDefenseViewModel> defenses = mapperUtil.mapList(
-                thesisDefenseService.findByTeacherId(id), ThesisDefenseViewModel.class);
+                thesisDefenseService.findByCommitteeMemberId(id), ThesisDefenseViewModel.class);
         model.addAttribute("defenses", defenses);
         return "theses-defenses/list";
     }

@@ -1,12 +1,17 @@
 package com.nbu.Graduation_System.controller.mvc;
 
 import com.nbu.Graduation_System.dto.teacher.CreateTeacherDto;
+import com.nbu.Graduation_System.entity.enums.ThesisApplicationStatusType;
 import com.nbu.Graduation_System.service.teacher.TeacherService;
 import com.nbu.Graduation_System.service.department.DepartmentService;
+import com.nbu.Graduation_System.service.thesis.ThesisApplicationService;
+import com.nbu.Graduation_System.service.thesis.ThesisDefenseService;
 import com.nbu.Graduation_System.util.MapperUtil;
 import com.nbu.Graduation_System.viewmodel.department.DepartmentViewModel;
 import com.nbu.Graduation_System.viewmodel.teacher.CreateTeacherViewModel;
 import com.nbu.Graduation_System.viewmodel.teacher.TeacherViewModel;
+import com.nbu.Graduation_System.viewmodel.thesis_application.ThesisApplicationViewModel;
+import com.nbu.Graduation_System.viewmodel.thesis_defense.ThesisDefenseViewModel;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -25,6 +30,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class TeacherViewController {
     
     private final TeacherService teacherService;
+    private final ThesisApplicationService thesisApplicationService;
+    private final ThesisDefenseService thesisDefenseService;
     private final DepartmentService departmentService;
     private final MapperUtil mapperUtil;
 
@@ -42,6 +49,23 @@ public class TeacherViewController {
                 teacherService.findById(id), TeacherViewModel.class);
         model.addAttribute("teacher", teacher);
         return "/teachers/view";
+    }
+
+    @GetMapping("/{id}/applications")
+    public String listThesisApplicationsByTeacherId(@PathVariable Long id, Model model) {
+        List<ThesisApplicationViewModel> applications = mapperUtil.mapList(
+                thesisApplicationService.findBySupervisorId(id), ThesisApplicationViewModel.class);
+        model.addAttribute("thesesApplications", applications);
+        model.addAttribute("statusType", ThesisApplicationStatusType.values());
+        return "theses-applications/list";
+    }
+
+    @GetMapping("/{id}/defenses")
+    public String listThesisDefensesByTeacherId(@PathVariable Long id, Model model) {
+        List<ThesisDefenseViewModel> defenses = mapperUtil
+                .mapList(thesisDefenseService.findAll(), ThesisDefenseViewModel.class);
+        model.addAttribute("defenses", defenses);
+        return "theses-defenses/list";
     }
 
     @GetMapping("/new")

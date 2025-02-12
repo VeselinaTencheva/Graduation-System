@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/layout :: header('Theses')">
+<head>
+    <th:block th:replace="~{fragments/layout :: header('Theses')}"/>
 </head>
 <body>
-    <nav th:replace="fragments/layout :: navigation"></nav>
-    
+    <nav th:replace="~{fragments/layout :: navigation}"></nav>
+
     <div class="container">
-        <div th:replace="fragments/layout :: message"></div>
+        <div th:replace="~{fragments/layout :: message}"></div>
         
-        <h2>Theses</h2>
-        <div th:replace="fragments/layout :: tableActions(@{/theses/new})"></div>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h2>Theses</h2>
+            <template th:replace="~{fragments/layout :: tableActions(@{/theses/new})}"></template>
+        </div>
         
         <div class="table-responsive">
             <table class="table table-striped table-hover">
@@ -23,28 +26,27 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="thesis : ${theses}" 
+                    <tr th:each="thesis : ${theses}"
                         th:onclick="'window.location.href=\'' + @{/theses/{id}(id=${thesis.id})} + '\''"
                         style="cursor: pointer;">
                         <td th:text="${thesis.id}"></td>
                         <td th:text="${thesis.title}"></td>
+                        <td th:text="${thesis.student?.name}"></td>
+                        <td th:text="${thesis.supervisor?.name}"></td>
                         <td>
-                            <span th:if="${thesis.getStudent() != null}" 
-                                  th:text="${thesis.getStudent().name}">
+                            <span th:class="${'badge ' + 
+                                (thesis.status == 'ACCEPTED' ? 'bg-success' : 
+                                (thesis.status == 'REJECTED' ? 'bg-danger' : 'bg-warning'))}"
+                                th:text="${thesis.status}">
                             </span>
                         </td>
-                        <td>
-                            <span th:if="${thesis.getSupervisor() != null}"
-                                  th:text="${thesis.getSupervisor().name}">
-                            </span>
-                        </td>
-                        <td th:text="${thesis.status}"></td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
 
-    <footer th:replace="fragments/layout :: footer"></footer>
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: scripts}"></div>
 </body>
 </html>

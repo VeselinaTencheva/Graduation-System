@@ -33,7 +33,7 @@ public class ThesisDefenseServiceImpl implements ThesisDefenseService {
     }
 
     @Override
-    public List<ThesisDefenseDto> findByTeacherId(Long teacherId) {
+    public List<ThesisDefenseDto> findByCommitteeMemberId(Long teacherId) {
         return mapperUtil.mapList(thesisDefenseRepository.findByTeacherId(teacherId), ThesisDefenseDto.class);
     }
 

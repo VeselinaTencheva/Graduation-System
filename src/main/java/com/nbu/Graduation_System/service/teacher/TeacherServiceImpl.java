@@ -3,6 +3,7 @@ package com.nbu.Graduation_System.service.teacher;
 import com.nbu.Graduation_System.dto.teacher.CreateTeacherDto;
 import com.nbu.Graduation_System.dto.teacher.TeacherDto;
 import com.nbu.Graduation_System.entity.Teacher;
+import com.nbu.Graduation_System.entity.enums.UserRoleType;
 import com.nbu.Graduation_System.entity.Department;
 import com.nbu.Graduation_System.repository.TeacherRepository;
 import com.nbu.Graduation_System.repository.DepartmentRepository;
@@ -10,6 +11,9 @@ import com.nbu.Graduation_System.repository.UserRepository;
 import com.nbu.Graduation_System.util.MapperUtil;
 
 import lombok.AllArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +25,9 @@ public class TeacherServiceImpl implements TeacherService {
     private final DepartmentRepository departmentRepository;
     private final UserRepository userRepository;
     private final MapperUtil mapperUtil;
+
+    @Autowired
+    private PasswordEncoder encoder;
 
     @Override
     public TeacherDto findById(Long id) {
@@ -43,8 +50,10 @@ public class TeacherServiceImpl implements TeacherService {
 
         Teacher teacher = mapperUtil.getModelMapper().map(teacherDto, Teacher.class);
         
-        
-        
+        final String encodedPassword = encoder.encode(teacherDto.getPassword());
+        teacher.setPassword(encodedPassword);
+        teacher.setRole(UserRoleType.TEACHER);
+
         // Set the department
         Department department = departmentRepository.findById(teacherDto.getDepartmentId())
             .orElseThrow(() -> new RuntimeException("Department not found with id: " + teacherDto.getDepartmentId()));

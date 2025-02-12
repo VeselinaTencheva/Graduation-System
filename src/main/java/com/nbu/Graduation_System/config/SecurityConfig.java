@@ -40,11 +40,14 @@ public class SecurityConfig {
             http
                 .authorizeHttpRequests(authorize -> authorize
                     // Public pages
-                    .requestMatchers("/login", "/css/**", "/js/**").permitAll()
+                    .requestMatchers("/login", "/css/**", "/js/**", "/unauthorized").permitAll()
                     // Student specific pages
-                    .requestMatchers("/thesis-applications/new", "/theses/upload/**").hasRole("STUDENT")
+                    // .requestMatchers("/thesis-applications/new", "/theses/upload/**").hasRole("STUDENT")
                     // Teacher specific pages
-                    .requestMatchers("/thesis-applications/*/accept", "/thesis-applications/*/reject").hasRole("TEACHER")
+                    .requestMatchers("/thesis-applications/**").hasRole("TEACHER")
+                    .requestMatchers("/teachers/**").hasRole("TEACHER")
+                    .requestMatchers("/students/**").hasRole("TEACHER")
+                    .requestMatchers("/departments/**").hasRole("TEACHER")
                     // Authenticated pages
                     .anyRequest().authenticated())
                 .formLogin(form -> form
@@ -54,8 +57,9 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout
                     .logoutSuccessUrl("/login")
-                    .permitAll()
-                );
+                    .permitAll())
+                .exceptionHandling(ex -> ex
+                    .accessDeniedPage("/unauthorized"));
         
             return http.build();
         }

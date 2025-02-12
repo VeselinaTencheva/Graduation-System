@@ -17,9 +17,5 @@ public class TeacherDto extends UserDto {
     private String academicTitle;
 
     @NotNull
-    private DepartmentDto department;
-
-    private String supervisedThesesNames;
-    private String thesisDefensesNames;
-    
+    private DepartmentDto department;    
 }

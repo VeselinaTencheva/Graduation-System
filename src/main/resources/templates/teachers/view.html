@@ -13,12 +13,7 @@
                 <h3 class="card-title mb-0">Teacher Details</h3>
                 <div class="d-flex gap-2">
                     <a th:href="@{/teachers/{id}/edit(id=${teacher.id})}" class="btn btn-warning">Edit</a>
-                    <form th:action="@{/teachers/{id}/delete(id=${teacher.id})}" method="post">
-                        <button type="submit" class="btn btn-danger"
-                                onclick="return confirm('Are you sure you want to delete this teacher?')">
-                            Delete
-                        </button>
-                    </form>
+                    <a th:href="@{'/teachers/delete/'+${teacher.id}}" class="btn btn-danger">Delete</a>
                 </div>
             </div>
             <div class="card-body">
@@ -50,16 +45,18 @@
                     <div class="col-sm-3"><strong>Supervised Theses:</strong></div>
                     <div class="col-sm-9">
                         <a 
-                           th:href="@{'/thesis-applications/supervised-by/'+${teacher.id}}" 
-                           th:text="${teacher.supervisedThesesNames}"></a>
+                        th:href="@{/teachers/{id}/applications(id=${teacher.id})}">
+                           View supervised theses
+                        </a>
                     </div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-sm-3"><strong>Thesis Defenses:</strong></div>
                     <div class="col-sm-9">
                         <a 
-                           th:href="@{'/thesis-defenses/teacher/'+${teacher.id}}" 
-                           th:text="${teacher.thesisDefensesNames}"></a>
+                           th:href="@{'/thesis-defenses/teacher/'+${teacher.id}}">
+                           View thesis defenses
+                        </a>
                     </div>
                 </div>
             </div>

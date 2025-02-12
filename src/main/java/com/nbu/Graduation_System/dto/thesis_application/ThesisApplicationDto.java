@@ -7,6 +7,8 @@ import com.nbu.Graduation_System.dto.thesis.ThesisDto;
 import com.nbu.Graduation_System.entity.enums.ThesisApplicationStatusType;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -19,6 +21,9 @@ public class ThesisApplicationDto {
     @NotBlank
     // @Size(min = 5, max = 50, message="Min 5, Max 50")
     private String title;
+
+    @NotNull
+    private LocalDateTime submissionDate;
 
     @NotBlank
     // @Size(min = 20, max = 300, message="Min 50, Max 300")
