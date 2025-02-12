@@ -24,9 +24,6 @@ public class ThesisViewModel {
     private Long id;
 
     @NotBlank
-    private String title;
-
-    @NotBlank
     private String content;
 
     @NotNull(message = "Thesis application is required")
@@ -36,7 +33,7 @@ public class ThesisViewModel {
     private String status;
 
     @NotNull(message = "Submission date is required")
-    private LocalDateTime submissionDate;
+    private LocalDateTime uploadDate;
 
     public StudentViewModel getStudent() {
         return thesisApplication != null ? thesisApplication.getStudent() : null;

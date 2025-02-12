@@ -42,7 +42,7 @@ public class SecurityConfig {
                     // Public pages
                     .requestMatchers("/login", "/css/**", "/js/**", "/unauthorized").permitAll()
                     // Student specific pages
-                    // .requestMatchers("/thesis-applications/new", "/theses/upload/**").hasRole("STUDENT")
+                    .requestMatchers("/my-thesis/**").hasRole("STUDENT")
                     // Teacher specific pages
                     .requestMatchers("/thesis-applications/**").hasRole("TEACHER")
                     .requestMatchers("/teachers/**").hasRole("TEACHER")

@@ -11,7 +11,7 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h3 class="card-title mb-0">Thesis Application Details</h3>
-                <div class="d-flex gap-2">
+                <div th:if="${#authentication.principal.id == thesisApp.supervisor.id}" class="d-flex gap-2">
                     <a th:href="@{/thesis-applications/{id}/edit(id=${thesisApp.id})}" class="btn btn-warning">Edit</a>
                     <a th:href="@{'/thesis-applications/delete/'+${thesisApp.id}}" class="btn btn-danger">Delete</a>
                 </div>
@@ -61,12 +61,12 @@
                                 <button type="submit" class="btn btn-danger btn-sm">Reject</button>
                             </form>
                         </div>
-                        
-                        <div th:if="${thesisApp.status == statusType[1] && thesisApp.thesis == null}"
-                             class="mt-2 ms-2">
-                            <a th:href="@{/theses/new(applicationId=${thesisApp.id})}" class="btn btn-primary btn-sm">
-                                Upload Thesis
-                            </a>
+
+                        <div th:if="${thesisApp.thesis != null}" class="mt-2">
+                            <span class="badge bg-info">
+                                <i class="bi bi-file-text"></i> Thesis submitted on 
+                                <span th:text="${#temporals.format(thesisApp.thesis.uploadDate, 'dd-MM-yyyy HH:mm')}"></span>
+                            </span>
                         </div>
                     </div>
                 </div>

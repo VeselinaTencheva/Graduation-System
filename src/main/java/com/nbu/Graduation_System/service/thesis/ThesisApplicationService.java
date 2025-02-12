@@ -10,6 +10,7 @@ public interface ThesisApplicationService {
     ThesisApplicationDto save(CreateThesisApplicationDto application);
     ThesisApplicationDto findById(Long id);
     List<ThesisApplicationDto> findBySupervisorId(Long id);
+    List<ThesisApplicationDto> findByStudentId(Long id);
     List<ThesisApplicationDto> findAll();
     void deleteById(Long id);
     void approve(Long id);

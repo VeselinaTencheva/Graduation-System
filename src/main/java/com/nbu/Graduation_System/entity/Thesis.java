@@ -19,6 +19,7 @@ public class Thesis extends BaseEntity {
     @NotBlank
     private String content;
     
+    @Column(nullable = false)
     private LocalDateTime uploadDate;
     
     @OneToOne(fetch = FetchType.LAZY)

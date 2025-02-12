@@ -4,9 +4,9 @@ import com.nbu.Graduation_System.dto.teacher.TeacherDto;
 import com.nbu.Graduation_System.dto.thesis_application.CreateThesisApplicationDto;
 import com.nbu.Graduation_System.entity.enums.ThesisApplicationStatusType;
 import com.nbu.Graduation_System.service.student.StudentService;
-import com.nbu.Graduation_System.service.teacher.TeacherService;
 import com.nbu.Graduation_System.service.thesis.ThesisApplicationService;
 import com.nbu.Graduation_System.util.MapperUtil;
+import com.nbu.Graduation_System.util.SecurityUtils;
 import com.nbu.Graduation_System.viewmodel.thesis_application.ThesisApplicationViewModel;
 import com.nbu.Graduation_System.viewmodel.thesis_application.CreateThesisApplicationViewModel;
 import com.nbu.Graduation_System.viewmodel.student.StudentViewModel;
@@ -28,8 +28,8 @@ import java.util.List;
 public class ThesisApplicationController {
     private final ThesisApplicationService thesisApplicationService;
     private final StudentService studentService;
-    private final TeacherService teacherService;
     private final MapperUtil mapperUtil;
+    private final SecurityUtils securityUtils;
     
     @GetMapping
     public String listThesesApplications(Model model) {
@@ -51,8 +51,13 @@ public class ThesisApplicationController {
 
     @GetMapping("/new")
     public String newThesisApplication(Model model) {
+        TeacherViewModel teacher = securityUtils.getCurrentTeacher();
+
         model.addAttribute("thesisApp", new CreateThesisApplicationViewModel());
-        model.addAttribute("students", mapperUtil.mapList(studentService.findAllEligibleForThesisApplication(), StudentViewModel.class));
+        model.addAttribute("students", mapperUtil.mapList(
+            studentService.findAllEligibleForThesisApplicationByDepartment(teacher.getDepartment().getId()), 
+            StudentViewModel.class
+        ));
         return "theses-applications/form";
     }
 
@@ -63,7 +68,13 @@ public class ThesisApplicationController {
             RedirectAttributes redirectAttributes,
             Model model) {
         
-        model.addAttribute("students", mapperUtil.mapList(studentService.findAllEligibleForThesisApplication(), StudentViewModel.class));
+        TeacherViewModel teacher = securityUtils.getCurrentTeacher();
+
+        // Add students from the same department for form re-display in case of errors
+        model.addAttribute("students", mapperUtil.mapList(
+            studentService.findAllEligibleForThesisApplicationByDepartment(teacher.getDepartment().getId()), 
+            StudentViewModel.class
+        ));
         
         if (bindingResult.hasErrors()) {
             model.addAttribute("error", "Please correct the errors below");
@@ -71,12 +82,8 @@ public class ThesisApplicationController {
         }
 
         try {
-            // For now, just use a default teacher
-            TeacherViewModel teacher = mapperUtil.mapList(teacherService.findAll(), TeacherViewModel.class).get(0);
-            
             // Map to DTO and set additional fields
             CreateThesisApplicationDto dto = mapperUtil.getModelMapper().map(thesisApp, CreateThesisApplicationDto.class);
-            // dto.setStudentId(thesisApp.getStudentId());
             dto.setSupervisor(mapperUtil.getModelMapper().map(teacher, TeacherDto.class));
             dto.setDepartment(teacher.getDepartment());
             
@@ -114,6 +121,13 @@ public class ThesisApplicationController {
         }
         return "redirect:/thesis-applications/" + id;
     }
+
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable("id") Long id) {
+        this.thesisApplicationService.deleteById(id);
+        return "redirect:/thesis-applications";
+    }
+
 
     // @GetMapping("by-student/{id}")
     // public String listThesesApplicationsByStudentId(@PathVariable Long id, Model model) {

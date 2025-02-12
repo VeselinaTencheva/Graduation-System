@@ -7,7 +7,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import com.nbu.Graduation_System.dto.thesis_application.CreateThesisApplicationDto;
+import com.nbu.Graduation_System.dto.thesis_application.ThesisApplicationDto;
+import com.nbu.Graduation_System.dto.teacher.TeacherDto;
+import com.nbu.Graduation_System.dto.student.StudentDto;
 import com.nbu.Graduation_System.entity.ThesisApplication;
+import com.nbu.Graduation_System.viewmodel.thesis_application.ThesisApplicationViewModel;
+import com.nbu.Graduation_System.viewmodel.teacher.TeacherViewModel;
+import com.nbu.Graduation_System.viewmodel.student.StudentViewModel;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,6 +40,30 @@ public class MapperUtil {
                 mapper.skip(ThesisApplication::setId);
                 mapper.skip(ThesisApplication::setThesis);
                 mapper.skip(ThesisApplication::setStudent);
+            });
+            
+        // Configure mapping for ThesisApplicationDto -> ThesisApplicationViewModel
+        this.modelMapper.typeMap(ThesisApplicationDto.class, ThesisApplicationViewModel.class)
+            .addMappings(mapper -> {
+                mapper.map(ThesisApplicationDto::getSupervisor, ThesisApplicationViewModel::setSupervisor);
+                mapper.map(ThesisApplicationDto::getStudent, ThesisApplicationViewModel::setStudent);
+                mapper.map(ThesisApplicationDto::getThesis, ThesisApplicationViewModel::setThesis);
+            });
+            
+        // Configure mapping for TeacherDto -> TeacherViewModel
+        this.modelMapper.typeMap(TeacherDto.class, TeacherViewModel.class)
+            .addMappings(mapper -> {
+                mapper.map(src -> src.getName(), TeacherViewModel::setName);
+                mapper.map(src -> src.getEmail(), TeacherViewModel::setEmail);
+                mapper.map(src -> src.getId(), TeacherViewModel::setId);
+            });
+            
+        // Configure mapping for StudentDto -> StudentViewModel
+        this.modelMapper.typeMap(StudentDto.class, StudentViewModel.class)
+            .addMappings(mapper -> {
+                mapper.map(src -> src.getName(), StudentViewModel::setName);
+                mapper.map(src -> src.getEmail(), StudentViewModel::setEmail);
+                mapper.map(src -> src.getId(), StudentViewModel::setId);
             });
     }
 

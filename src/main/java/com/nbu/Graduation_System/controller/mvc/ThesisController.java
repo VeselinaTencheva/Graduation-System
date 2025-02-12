@@ -9,7 +9,6 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.AllArgsConstructor;
 
@@ -31,7 +30,7 @@ public class ThesisController {
     }
 
     @GetMapping("/{id}")
-    public String viewThesis(@PathVariable Long id, Model model) {
+    public String viewThesis(@PathVariable("id") Long id, Model model) {
         model.addAttribute("thesis", mapperUtil.getModelMapper().map(
                 thesisService.findById(id), ThesisViewModel.class));
         return "theses/view";
@@ -88,12 +87,9 @@ public class ThesisController {
     //     return "redirect:/theses/" + id;
     // }
 
-    @PostMapping("/{id}/delete")
-    public String deleteThesis(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        if (thesisService.existsById(id)) {
-            thesisService.deleteById(id);
-            redirectAttributes.addFlashAttribute("message", "Thesis deleted successfully");
-        }
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable("id") Long id) {
+        this.thesisService.deleteById(id);
         return "redirect:/theses";
     }
 }

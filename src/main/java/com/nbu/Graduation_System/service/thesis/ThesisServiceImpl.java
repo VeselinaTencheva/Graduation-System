@@ -4,11 +4,14 @@ import com.nbu.Graduation_System.dto.thesis.CreateThesisDto;
 import com.nbu.Graduation_System.dto.thesis.ThesisDto;
 import com.nbu.Graduation_System.entity.Thesis;
 import com.nbu.Graduation_System.entity.ThesisApplication;
+import com.nbu.Graduation_System.repository.ThesisApplicationRepository;
 import com.nbu.Graduation_System.repository.ThesisRepository;
 import com.nbu.Graduation_System.util.MapperUtil;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 
@@ -17,6 +20,7 @@ import lombok.AllArgsConstructor;
 @Transactional
 public class ThesisServiceImpl implements ThesisService {
     
+    private final ThesisApplicationRepository thesisApplicationRepository;
     private final ThesisRepository thesisRepository;
     private final MapperUtil mapperUtil;
 
@@ -36,6 +40,10 @@ public class ThesisServiceImpl implements ThesisService {
     @Override
     public ThesisDto save(CreateThesisDto thesisDto) {
         Thesis thesis = mapperUtil.getModelMapper().map(thesisDto, Thesis.class);
+        ThesisApplication application = thesisApplicationRepository.findById(thesisDto.getApplicationId())
+            .orElseThrow(() -> new RuntimeException("Thesis application not found"));
+        thesis.setUploadDate(LocalDateTime.now());
+        thesis.setThesisApplication(application);
         thesis = thesisRepository.save(thesis);
         return mapperUtil.getModelMapper().map(thesis, ThesisDto.class);
     }

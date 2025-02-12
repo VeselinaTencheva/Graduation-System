@@ -4,17 +4,14 @@ import com.nbu.Graduation_System.dto.thesis_application.CreateThesisApplicationD
 import com.nbu.Graduation_System.dto.thesis_application.ThesisApplicationDto;
 import com.nbu.Graduation_System.entity.ThesisApplication;
 import com.nbu.Graduation_System.entity.Student;
-import com.nbu.Graduation_System.entity.Thesis;
 import com.nbu.Graduation_System.entity.enums.ThesisApplicationStatusType;
 import com.nbu.Graduation_System.repository.ThesisApplicationRepository;
 import com.nbu.Graduation_System.repository.StudentRepository;
-import com.nbu.Graduation_System.repository.ThesisRepository;
 import com.nbu.Graduation_System.util.MapperUtil;
+import com.nbu.Graduation_System.util.SecurityUtils;
 
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,8 +24,11 @@ public class ThesisApplicationServiceImpl implements ThesisApplicationService {
     
     private final ThesisApplicationRepository thesisApplicationRepository;
     private final StudentRepository studentRepository;
-    private final ThesisRepository thesisRepository;
-    private final MapperUtil mapperUtil;
+    @Autowired
+    private MapperUtil mapperUtil;
+
+    @Autowired
+    private SecurityUtils securityUtils;
 
 
      @Override
@@ -49,6 +49,11 @@ public class ThesisApplicationServiceImpl implements ThesisApplicationService {
     @Override
     public List<ThesisApplicationDto> findBySupervisorId(Long id) {
         return mapperUtil.mapList(thesisApplicationRepository.findBySupervisorId(id), ThesisApplicationDto.class);
+    }
+
+    @Override
+    public List<ThesisApplicationDto> findByStudentId(Long id) {
+        return mapperUtil.mapList(thesisApplicationRepository.findByStudentId(id), ThesisApplicationDto.class);
     }
 
     @Override
@@ -78,12 +83,6 @@ public class ThesisApplicationServiceImpl implements ThesisApplicationService {
             throw new RuntimeException("Supervisors cannot approve their own thesis applications");
         }
         
-        // Create thesis when application is approved
-        Thesis thesis = new Thesis();
-        thesis.setUploadDate(LocalDateTime.now());
-        thesis.setThesisApplication(application);
-        thesisRepository.save(thesis);
-        
         application.setStatus(ThesisApplicationStatusType.ACCEPTED);
         thesisApplicationRepository.save(application);
     }
@@ -107,12 +106,11 @@ public class ThesisApplicationServiceImpl implements ThesisApplicationService {
     }
 
     private boolean isCurrentUserSupervisor(ThesisApplication application) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            return application.getSupervisor().getId().equals(Long.parseLong(userDetails.getUsername()));
+        try {
+            return application.getSupervisor().getId().equals(securityUtils.getCurrentTeacher().getId());
+        } catch (Exception e) {
+            return false;
         }
-        return false;
     }
 
     @Override

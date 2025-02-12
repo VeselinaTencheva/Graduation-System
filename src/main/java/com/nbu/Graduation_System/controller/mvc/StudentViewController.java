@@ -37,7 +37,7 @@ public class StudentViewController {
     }
 
     @GetMapping("/{id}")
-    public String viewStudent(@PathVariable Long id, Model model) {
+    public String viewStudent(@PathVariable("id") Long id, Model model) {
         StudentViewModel student = mapperUtil.getModelMapper().map(
                 studentService.findById(id), StudentViewModel.class);
         model.addAttribute("student", student);
@@ -76,7 +76,7 @@ public class StudentViewController {
     }
 
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable Long id) {
+    public String delete(@PathVariable("id") Long id) {
         this.studentService.deleteById(id);
         return "redirect:/students";
     }

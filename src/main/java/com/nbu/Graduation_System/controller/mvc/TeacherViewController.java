@@ -44,7 +44,7 @@ public class TeacherViewController {
     }
 
     @GetMapping("/{id}")
-    public String viewTeacher(@PathVariable Long id, Model model) {
+    public String viewTeacher(@PathVariable("id") Long id, Model model) {
         TeacherViewModel teacher = mapperUtil.getModelMapper().map(
                 teacherService.findById(id), TeacherViewModel.class);
         model.addAttribute("teacher", teacher);
@@ -52,7 +52,7 @@ public class TeacherViewController {
     }
 
     @GetMapping("/{id}/applications")
-    public String listThesisApplicationsByTeacherId(@PathVariable Long id, Model model) {
+    public String listThesisApplicationsByTeacherId(@PathVariable("id") Long id, Model model) {
         List<ThesisApplicationViewModel> applications = mapperUtil.mapList(
                 thesisApplicationService.findBySupervisorId(id), ThesisApplicationViewModel.class);
         model.addAttribute("thesesApplications", applications);
@@ -61,7 +61,7 @@ public class TeacherViewController {
     }
 
     @GetMapping("/{id}/defenses")
-    public String listThesisDefensesByTeacherId(@PathVariable Long id, Model model) {
+    public String listThesisDefensesByTeacherId(@PathVariable("id") Long id, Model model) {
         List<ThesisDefenseViewModel> defenses = mapperUtil
                 .mapList(thesisDefenseService.findAll(), ThesisDefenseViewModel.class);
         model.addAttribute("defenses", defenses);
@@ -100,7 +100,7 @@ public class TeacherViewController {
     }
 
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable Long id) {
+    public String delete(@PathVariable("id") Long id) {
         this.teacherService.deleteById(id);
         return "redirect:/teachers";
     }

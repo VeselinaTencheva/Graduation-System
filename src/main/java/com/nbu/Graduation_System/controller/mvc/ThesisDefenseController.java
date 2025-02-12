@@ -29,7 +29,7 @@ public class ThesisDefenseController {
     }
 
     @GetMapping("/{id}")
-    public String viewDefense(@PathVariable Long id, Model model) {
+    public String viewDefense(@PathVariable("id") Long id, Model model) {
         ThesisDefenseViewModel defense = mapperUtil.getModelMapper().map(
                 thesisDefenseService.findById(id), ThesisDefenseViewModel.class);
         model.addAttribute("defense", defense);
@@ -37,7 +37,7 @@ public class ThesisDefenseController {
     }
 
     @GetMapping("/teacher/{id}")
-    public String listDefensesByTeacherId(@PathVariable Long id, Model model) {
+    public String listDefensesByTeacherId(@PathVariable("id") Long id, Model model) {
         List<ThesisDefenseViewModel> defenses = mapperUtil.mapList(
                 thesisDefenseService.findByCommitteeMemberId(id), ThesisDefenseViewModel.class);
         model.addAttribute("defenses", defenses);

@@ -26,7 +26,7 @@ public class DepartmentController {
     }
 
     @GetMapping("/{id}")
-    public String viewDepartment(@PathVariable Long id, Model model) {
+    public String viewDepartment(@PathVariable("id") Long id, Model model) {
         DepartmentViewModel department = mapperUtil.getModelMapper().map(
                 departmentService.findById(id), DepartmentViewModel.class);
         model.addAttribute("department", department);
@@ -34,7 +34,7 @@ public class DepartmentController {
     }
 
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable Long id) {
+    public String delete(@PathVariable("id") Long id) {
         this.departmentService.deleteById(id);
         return "redirect:/departments";
     }

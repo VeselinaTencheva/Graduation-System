@@ -30,14 +30,14 @@ public class ThesisReviewController {
     }
 
     @GetMapping("/{id}")
-    public String viewReview(@PathVariable Long id, Model model) {
+    public String viewReview(@PathVariable("id") Long id, Model model) {
         model.addAttribute("review", mapperUtil.getModelMapper().map(
                 thesisReviewService.findById(id), ThesisReviewViewModel.class));
         return "thesis-reviews/view";
     }
 
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable Long id) {
+    public String delete(@PathVariable("id") Long id) {
         this.thesisReviewService.deleteById(id);
         return "redirect:/thesis-reviews";
     }

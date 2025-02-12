@@ -49,6 +49,16 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    public List<StudentDto> findAllEligibleForThesisApplicationByDepartment(Long departmentId) {
+        return mapperUtil.mapList(
+            studentRepository.findAllEligibleForThesisApplication().stream()
+                .filter(student -> student.getDepartment().getId().equals(departmentId))
+                .toList(), 
+            StudentDto.class
+        );
+    }
+
+    @Override
     public void deleteById(Long id) {
         if (!studentRepository.existsById(id)) {
             throw new RuntimeException("Student with id=" + id + " not found!");

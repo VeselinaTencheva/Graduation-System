@@ -10,6 +10,7 @@ public interface StudentService {
     StudentDto findById(Long id);
     List<StudentDto> findAll();
     List<StudentDto> findAllEligibleForThesisApplication();
+    List<StudentDto> findAllEligibleForThesisApplicationByDepartment(Long departmentId);
     void deleteById(Long id);
     boolean existsById(Long id);
     // Optional<StudentDto> findByFacultyNumber(String facultyNumber);
