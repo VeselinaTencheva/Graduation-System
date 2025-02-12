@@ -12,6 +12,9 @@ import com.nbu.Graduation_System.repository.ThesisRepository;
 import com.nbu.Graduation_System.util.MapperUtil;
 
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,6 +72,11 @@ public class ThesisApplicationServiceImpl implements ThesisApplicationService {
         if (application.getStatus() != ThesisApplicationStatusType.SUBMITTED) {
             throw new RuntimeException("Can only approve submitted applications");
         }
+
+        // Check if current user is the supervisor
+        if (isCurrentUserSupervisor(application)) {
+            throw new RuntimeException("Supervisors cannot approve their own thesis applications");
+        }
         
         // Create thesis when application is approved
         Thesis thesis = new Thesis();
@@ -88,9 +96,23 @@ public class ThesisApplicationServiceImpl implements ThesisApplicationService {
         if (application.getStatus() != ThesisApplicationStatusType.SUBMITTED) {
             throw new RuntimeException("Can only reject submitted applications");
         }
+
+        // Check if current user is the supervisor
+        if (isCurrentUserSupervisor(application)) {
+            throw new RuntimeException("Supervisors cannot reject their own thesis applications");
+        }
         
         application.setStatus(ThesisApplicationStatusType.REJECTED);
         thesisApplicationRepository.save(application);
+    }
+
+    private boolean isCurrentUserSupervisor(ThesisApplication application) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            return application.getSupervisor().getId().equals(Long.parseLong(userDetails.getUsername()));
+        }
+        return false;
     }
 
     @Override

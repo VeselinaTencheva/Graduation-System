@@ -54,4 +54,16 @@ public class ThesisApplicationViewModel {
 
     @NotNull
     private TeacherViewModel supervisor;
+
+    public boolean isApproved() {
+        return status == ThesisApplicationStatusType.ACCEPTED;
+    }
+
+    public boolean isRejected() {
+        return status == ThesisApplicationStatusType.REJECTED;
+    }
+
+    public boolean isPending() {
+        return status == ThesisApplicationStatusType.SUBMITTED;
+    }
 }

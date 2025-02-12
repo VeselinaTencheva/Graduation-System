@@ -50,7 +50,7 @@
                             <span th:case="${statusType[2]}" class="badge bg-danger">Rejected</span>
                         </span>
                         
-                        <div th:if="${thesisApp.status == statusType[0]}"
+                        <div th:if="${thesisApp.isPending() and #authentication.principal.id != thesisApp.supervisor.id}"
                              class="mt-2 d-inline-flex gap-2 align-items-center ms-2">
                             <form th:action="@{/thesis-applications/{id}/approve(id=${thesisApp.id})}" 
                                   method="post">
