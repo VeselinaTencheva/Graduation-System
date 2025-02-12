@@ -1,14 +1,9 @@
-// package com.nbu.Graduation_System.service.user;
+package com.nbu.Graduation_System.service.user;
 
-// import java.util.List;
-// import java.util.Optional;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
-// import com.nbu.Graduation_System.dto.user.UserDto;
+import com.nbu.Graduation_System.entity.User;
 
-// public interface UserService {
-//     UserDto save(UserDto user);
-//     Optional<UserDto> findById(Long id);
-//     List<UserDto> findAll();
-//     void deleteById(Long id);
-//     boolean existsById(Long id);
-// }
+public interface UserService extends UserDetailsService {
+    User loadUserByUsername(String username);
+}

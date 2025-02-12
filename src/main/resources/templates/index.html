@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/layout :: header('Graduation System')">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:block th:replace="~{fragments/layout :: header('Graduation System')}">
 </head>
 <body>
     <nav th:replace="fragments/layout :: navigation"></nav>
@@ -11,7 +12,7 @@
             <p class="lead">Manage students, teachers, and theses in one place</p>
         </div>
         
-        <div class="row mb-4">
+        <!-- <div class="row mb-4">
             <div class="col-md-4 mb-3">
                 <div class="card h-100">
                     <div class="card-body">
@@ -75,60 +76,55 @@
             </div>
         </div>
         
-        <!-- <div class="row">
-            <div class="col-md-6 mb-3">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">Recent Thesis Applications</h5>
-                    </div>
-                    <div class="card-body">
-                        <div th:if="${recentApplications != null and !recentApplications.empty}">
-                            <div class="list-group">
-                                <a th:each="application : ${recentApplications}"
-                                   th:href="@{/theses/applications/{id}(id=${application.id})}"
-                                   class="list-group-item list-group-item-action">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-1" th:text="${application.title}">Title</h6>
-                                        <small th:text="${application.status}">Status</small>
-                                    </div>
-                                    <p class="mb-1" th:text="${application.student?.name}">Student Name</p>
-                                </a>
+        <div class="container mt-4">
+            <div sec:authorize="hasRole('STUDENT')" th:if="${thesisApplications != null}">
+                <h2>Your Thesis Applications</h2>
+                <div class="row">
+                    <div class="col-12">
+                        <div th:if="${thesisApplications.empty}" class="alert alert-info">
+                            You haven't submitted any thesis applications yet.
+                        </div>
+                        <div th:if="${!thesisApplications.empty}" class="list-group">
+                            <div th:each="application : ${thesisApplications}" class="list-group-item">
+                                <h5 class="mb-1" th:text="${application.title}">Title</h5>
+                                <p class="mb-1" th:text="${application.description}">Description</p>
+                                <small th:text="'Status: ' + ${application.status}">Status</small>
                             </div>
                         </div>
-                        <p th:if="${recentApplications == null or recentApplications.empty}" 
-                           class="text-muted mb-0">No recent applications</p>
+                        <a href="/thesis-applications/new" class="btn btn-primary mt-3">Submit New Application</a>
                     </div>
                 </div>
-            </div> -->
-            
-            <!-- <div class="col-md-6 mb-3">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">Upcoming Defenses</h5>
-                    </div>
-                    <div class="card-body">
-                        <div th:if="${upcomingDefenses != null and !upcomingDefenses.empty}">
-                            <div class="list-group">
-                                <a th:each="defense : ${upcomingDefenses}"
-                                   th:href="@{/theses/defenses/{id}(id=${defense.id})}"
-                                   class="list-group-item list-group-item-action">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-1" th:text="${defense.thesis?.title}">Thesis Title</h6>
-                                        <small th:text="${#temporals.format(defense.date, 'dd-MM-yyyy')}">Date</small>
-                                    </div>
-                                    <p class="mb-1" th:text="${defense.thesis?.student?.name}">Student Name</p>
-                                </a>
+            </div>
+
+            <div sec:authorize="hasRole('TEACHER')" th:if="${teacherWithTheses != null}">
+                <h2>Supervised Thesis Applications</h2>
+                <div class="row">
+                    <div class="col-12">
+                        <div th:if="${teacherWithTheses.supervisedTheses.empty}" class="alert alert-info">
+                            You don't have any thesis applications to supervise yet.
+                        </div>
+                        <div th:if="${!teacherWithTheses.supervisedTheses.empty}" class="list-group">
+                            <div th:each="thesis : ${teacherWithTheses.supervisedTheses}" class="list-group-item">
+                                <h5 class="mb-1" th:text="${thesis.title}">Title</h5>
+                                <p class="mb-1" th:text="${thesis.description}">Description</p>
+                                <small th:text="'Student: ' + ${thesis.student.name}">Student</small>
+                                <div th:if="${thesis.status.name() == 'PENDING'}" class="mt-2">
+                                    <form th:action="@{/thesis-applications/{id}/accept(id=${thesis.id})}" method="post" style="display: inline;">
+                                        <button type="submit" class="btn btn-success btn-sm">Accept</button>
+                                    </form>
+                                    <form th:action="@{/thesis-applications/{id}/reject(id=${thesis.id})}" method="post" style="display: inline;">
+                                        <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
-                        <p th:if="${upcomingDefenses == null or upcomingDefenses.empty}" 
-                           class="text-muted mb-0">No upcoming defenses</p>
                     </div>
                 </div>
-            </div> -->
-        </div>
+            </div>
+        </div> -->
     </div>
 
-    <footer th:replace="fragments/layout :: footer"></footer>
-    <div th:replace="fragments/layout :: scripts"></div>
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: scripts}"></div>
 </body>
 </html>

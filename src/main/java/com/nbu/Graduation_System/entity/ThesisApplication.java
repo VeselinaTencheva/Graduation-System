@@ -43,4 +43,12 @@ public class ThesisApplication extends BaseEntity {
 
     @OneToOne(mappedBy = "thesisApplication")
     private Thesis thesis;
+
+    public boolean isApproved() {
+        return status == ThesisApplicationStatusType.ACCEPTED;
+    }
+
+    public boolean isRejected() {
+        return status == ThesisApplicationStatusType.REJECTED;
+    }
 }
