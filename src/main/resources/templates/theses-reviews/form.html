@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: header('New Thesis Review')">
+</head>
+<body>
+    <nav th:replace="fragments/layout :: navigation"></nav>
+    
+    <div class="container mt-4">
+        <div th:replace="fragments/layout :: message"></div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title mb-0">New Thesis Review</h3>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/thesis-reviews/new(thesisId=${param.thesisId})}" method="post" th:object="${review}" class="needs-validation" novalidate>
+                    <div class="alert alert-danger mb-4" th:if="${error}" th:text="${error}"></div>
+
+                    <div class="mb-2 d-flex gap-1">
+                        <h5 class="text-muted">Reviewer: </h5>
+                        <a th:if="${reviewer != null}" 
+                            th:href="@{'/teachers/'+${reviewer.id}}" 
+                            th:text="${reviewer.name}">
+                        </a>
+                    </div>
+
+                    <div class="mb-2 d-flex gap-1">
+                        <h5 class="text-muted">Thesis: </h5>
+                        <a 
+                            th:href="@{'/theses/'+${thesis.id}}" 
+                            th:text="${thesis.title}">
+                        </a>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="comments" class="form-label">Comments *</label>
+                        <textarea class="form-control" id="comments" th:field="*{comments}" rows="3"
+                                  th:errorclass="is-invalid"></textarea>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('comments')}" th:errors="*{comments}">Please enter valid comments</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="positive" class="form-label">Review Type *</label>
+                        <select class="form-select" id="positive" th:field="*{positive}"
+                                th:errorclass="is-invalid">
+                            <option value="" selected>Select a value</option>
+                            <option value="true">Positive</option>
+                            <option value="false">Negative</option>
+                        </select>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('positive')}" th:errors="*{positive}">Please select a valid option</div>
+                    </div>                          
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">Submit Review</button>
+                        <a th:href="@{/thesis-reviews}" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

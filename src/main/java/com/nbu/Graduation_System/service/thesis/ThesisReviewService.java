@@ -6,7 +6,9 @@ import java.util.List;
 
 public interface ThesisReviewService {
     ThesisReviewDto save(CreateThesisReviewDto review);
+    ThesisReviewDto update(Long id, CreateThesisReviewDto review);
     ThesisReviewDto findById(Long id);
+    ThesisReviewDto findByThesisId(Long thesisId);
     List<ThesisReviewDto> findAll();
     void deleteById(Long id);
     // boolean existsById(Long id);

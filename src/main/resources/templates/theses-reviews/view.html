@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: header('Thesis Review Details')">
+</head>
+<body>
+    <nav th:replace="fragments/layout :: navigation"></nav>
+    
+    <div class="container">
+        <div th:replace="fragments/layout :: message"></div>
+        
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="card-title mb-0">Thesis Review Details</h3>
+                <div th:if="${#authentication.principal.id == review.reviewer.id}" class="d-flex gap-2">
+                    <a th:href="@{/thesis-reviews/edit/{id}(id=${review.id})}" class="btn btn-warning">Edit</a>
+                    <a th:href="@{'/thesis-reviews/delete/'+${review.id}}" class="btn btn-danger">Delete</a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>ID:</strong></div>
+                    <div class="col-sm-9" th:text="${review.id}"></div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Comments:</strong></div>
+                    <div class="col-sm-9" th:text="${review.comments}"></div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Review Date:</strong></div>
+                    <div class="col-sm-9" th:text="${#temporals.format(review.reviewDate, 'dd-MM-yyyy HH:mm')}"></div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Reviewer:</strong></div>
+                    <div class="col-sm-9">
+                        <a th:if="${review.reviewer}"  
+                           th:href="@{'/teachers/'+${review.reviewer.id}}" 
+                           th:text="${review.reviewer.name}"></a>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Thesis:</strong></div>
+                    <div class="col-sm-9">
+                        <a th:if="${review.thesis}"  
+                           th:href="@{'/theses/'+${review.thesis.id}}" 
+                           th:text="${review.thesis.getTitle()}"></a>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Status:</strong></div>
+                    <div class="col-sm-9">
+                        <span th:switch="${review.isPositive}">
+                            <span th:case="${true}" class="badge bg-success">Positive</span>
+                            <span th:case="${false}" class="badge bg-danger">Negative</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

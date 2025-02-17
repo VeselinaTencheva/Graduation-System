@@ -2,6 +2,7 @@ package com.nbu.Graduation_System.viewmodel.thesis;
 
 import com.nbu.Graduation_System.viewmodel.student.StudentViewModel;
 import com.nbu.Graduation_System.viewmodel.thesis_application.ThesisApplicationViewModel;
+import com.nbu.Graduation_System.viewmodel.thesis_review.ThesisReviewViewModel;
 import com.nbu.Graduation_System.viewmodel.teacher.TeacherViewModel;
 
 import jakarta.validation.constraints.NotBlank;
@@ -34,7 +35,9 @@ public class ThesisViewModel {
 
     @NotNull(message = "Submission date is required")
     private LocalDateTime uploadDate;
-
+    
+    private ThesisReviewViewModel review;
+    
     public StudentViewModel getStudent() {
         return thesisApplication != null ? thesisApplication.getStudent() : null;
     }
@@ -42,5 +45,16 @@ public class ThesisViewModel {
     public TeacherViewModel getSupervisor() {
         return thesisApplication != null ? thesisApplication.getSupervisor() : null;
     }
+
+    public String getTitle() {
+        return thesisApplication != null ? thesisApplication.getTitle() : null;
+    }
+
+    // public String getStatus() {
+    //     if (review == null) {
+    //         return "Pending Review";
+    //     }
+    //     return review.isPositive() ? "Approved" : "Changes Required";
+    // }
 
 }

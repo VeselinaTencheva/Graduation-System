@@ -9,7 +9,8 @@ import com.nbu.Graduation_System.dto.thesis.ThesisDto;
 @Data
 public class ThesisReviewDto {
     private Long id;
-    private LocalDateTime submissionDate;
+    private String comments;
+    private LocalDateTime reviewDate;
     private boolean isPositive;
     private ThesisDto thesis;
     private TeacherDto reviewer;

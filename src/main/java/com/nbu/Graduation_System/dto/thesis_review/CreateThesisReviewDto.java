@@ -1,9 +1,7 @@
 package com.nbu.Graduation_System.dto.thesis_review;
 
-import java.time.LocalDateTime;
-
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
 import lombok.*;
 
 import com.nbu.Graduation_System.dto.teacher.TeacherDto;
@@ -14,9 +12,10 @@ import com.nbu.Graduation_System.dto.thesis.ThesisDto;
 @AllArgsConstructor
 @Data
 public class CreateThesisReviewDto {
-    @NotNull(message = "Submission date cannot be null")
-    @PastOrPresent(message = "Submission date cannot be in the future")
-    private LocalDateTime submissionDate;
+
+    @NotNull
+    @NotBlank
+    private String comments;
 
     @NotNull
     private boolean isPositive;

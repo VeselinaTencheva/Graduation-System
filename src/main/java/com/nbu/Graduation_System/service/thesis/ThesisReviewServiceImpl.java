@@ -3,8 +3,11 @@ package com.nbu.Graduation_System.service.thesis;
 import com.nbu.Graduation_System.dto.thesis_review.CreateThesisReviewDto;
 import com.nbu.Graduation_System.dto.thesis_review.ThesisReviewDto;
 import com.nbu.Graduation_System.entity.ThesisReview;
+import com.nbu.Graduation_System.entity.Thesis;
 import com.nbu.Graduation_System.repository.ThesisReviewRepository;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.nbu.Graduation_System.util.MapperUtil;
@@ -27,6 +30,14 @@ public class ThesisReviewServiceImpl implements ThesisReviewService {
     }
 
     @Override
+    public ThesisReviewDto findByThesisId(Long thesisId) {
+        return mapperUtil.getModelMapper().map(
+                thesisReviewRepository.findByThesisId(thesisId)
+                        .orElseThrow(() -> new RuntimeException("ThesisReview with thesisId=" + thesisId + " not found!")),
+                ThesisReviewDto.class);
+    }
+
+    @Override
     public List<ThesisReviewDto> findAll() {
         return mapperUtil.mapList(thesisReviewRepository.findAll(), ThesisReviewDto.class);
     }
@@ -34,13 +45,36 @@ public class ThesisReviewServiceImpl implements ThesisReviewService {
     @Override
     public ThesisReviewDto save(CreateThesisReviewDto reviewDto) {
         ThesisReview review = mapperUtil.getModelMapper().map(reviewDto, ThesisReview.class);
+        review.setReviewDate(LocalDateTime.now());
+        review = thesisReviewRepository.save(review);
+        return mapperUtil.getModelMapper().map(review, ThesisReviewDto.class);
+    }
+
+    @Override
+    public ThesisReviewDto update(Long id, CreateThesisReviewDto reviewDto) {
+        ThesisReview review = thesisReviewRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("ThesisReview with id=" + id + " not found!"));
+        
+        review.setComments(reviewDto.getComments());
+        review.setPositive(reviewDto.isPositive());
+        review.setReviewDate(LocalDateTime.now());
+        
         review = thesisReviewRepository.save(review);
         return mapperUtil.getModelMapper().map(review, ThesisReviewDto.class);
     }
 
     @Override
     public void deleteById(Long id) {
-        thesisReviewRepository.deleteById(id);
+        ThesisReview review = thesisReviewRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("ThesisReview with id=" + id + " not found!"));
+        
+        Thesis thesis = review.getThesis();
+        if (thesis != null) {
+            thesis.setReview(null);
+        }
+        review.setThesis(null);
+        
+        thesisReviewRepository.delete(review);
     }
 
     // @Override

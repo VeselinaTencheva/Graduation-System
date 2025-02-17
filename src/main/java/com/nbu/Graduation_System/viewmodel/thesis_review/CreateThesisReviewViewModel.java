@@ -1,12 +1,7 @@
 package com.nbu.Graduation_System.viewmodel.thesis_review;
 
-import java.time.LocalDateTime;
-
-import com.nbu.Graduation_System.dto.teacher.TeacherDto;
-import com.nbu.Graduation_System.dto.thesis.ThesisDto;
-
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -19,16 +14,10 @@ import lombok.ToString;
 @Setter
 @ToString
 public class CreateThesisReviewViewModel {
-    @NotNull(message = "Submission date cannot be null")
-    @PastOrPresent(message = "Submission date cannot be in the future")
-    private LocalDateTime submissionDate;
 
-    @NotNull
-    private boolean isPositive;
+    @NotBlank(message = "Comments cannot be null")
+    private String comments;
 
-    @NotNull
-    private TeacherDto reviewer;
-
-    @NotNull
-    private ThesisDto thesis;
+    @NotNull(message = "Review type cannot be null")
+    private Boolean positive;
 }

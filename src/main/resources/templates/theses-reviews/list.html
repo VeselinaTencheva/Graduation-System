@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{fragments/layout :: header('Thesis Reviews')}"/>
+</head>
+<body>
+    <nav th:replace="~{fragments/layout :: navigation}"></nav>
+    
+    <div class="container">
+        <div th:replace="~{fragments/layout :: message}"></div>
+        
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h2>Theses Reviews</h2>
+        </div>
+        
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Reviewer</th>
+                        <th>Thesis</th>
+                        <th>Review Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="review : ${reviews}" 
+                        th:onclick="'window.location.href=\'' + @{/thesis-reviews/{id}(id=${review.id})} + '\''"
+                        style="cursor: pointer;"
+                        class="table-row-link">
+                        <td th:text="${review.id}"></td>
+                        <td>
+                            <a th:if="${review.reviewer != null}" 
+                               th:href="@{'/teachers/'+${review.reviewer.id}}" 
+                               th:text="${review.reviewer.name}">
+                            </a>
+                        </td>
+                        <td>
+                            <a th:if="${review.thesis != null}"
+                               th:href="@{/theses/{id}(id=${review.thesis.id})}"
+                               th:text="${review.thesis.getTitle()}">
+                            </a>
+                        </td>
+                        <td th:text="${#temporals.format(review.reviewDate, 'dd-MM-yyyy HH:mm')}"></td>
+                        <td>
+                            <span th:switch="${review.isPositive}">
+                                <span th:case="${true}" class="badge bg-success">Positive</span>
+                                <span th:case="${false}" class="badge bg-danger">Negative</span>
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

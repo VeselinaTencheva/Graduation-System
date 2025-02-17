@@ -1,12 +1,12 @@
 package com.nbu.Graduation_System.viewmodel.thesis_review;
 
-import com.nbu.Graduation_System.dto.teacher.TeacherDto;
-import com.nbu.Graduation_System.dto.thesis.ThesisDto;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
-
 import java.time.LocalDateTime;
+
+import com.nbu.Graduation_System.viewmodel.teacher.TeacherViewModel;
+import com.nbu.Graduation_System.viewmodel.thesis.ThesisViewModel;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,18 +21,18 @@ import lombok.ToString;
 @ToString
 public class ThesisReviewViewModel {
 
+    @NotNull
     private Long id;
 
-    @NotNull(message = "Submission date cannot be null")
-    @PastOrPresent(message = "Submission date cannot be in the future")
-    private LocalDateTime submissionDate;
+    @NotBlank(message = "Comments are required")
+    private String comments;
 
-    @NotNull
+    private LocalDateTime reviewDate;
+
+    @NotNull(message = "Review type is required")
     private boolean isPositive;
 
-    @NotNull
-    private TeacherDto reviewer;
+    private ThesisViewModel thesis;
 
-    @NotNull
-    private ThesisDto thesis;
+    private TeacherViewModel reviewer;
 }

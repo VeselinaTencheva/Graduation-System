@@ -21,7 +21,8 @@
                         <th>ID</th>
                         <th>Student</th>
                         <th>Supervisor</th>
-                        <th>Status</th>
+                        <th>Uploaded Date</th>
+                        <th>Review</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -29,14 +30,33 @@
                         th:onclick="'window.location.href=\'' + @{/theses/{id}(id=${thesis.id})} + '\''"
                         style="cursor: pointer;">
                         <td th:text="${thesis.id}"></td>
-                        <td th:text="${thesis.student?.name}"></td>
-                        <td th:text="${thesis.supervisor?.name}"></td>
+                        <td> 
+                            <a th:if="${thesis.student}" 
+                               th:href="@{'/students/'+${thesis.student.id}}" 
+                               th:text="${thesis.student.name}"></a>
+                        </td>
+                        <td> 
+                            <a th:if="${thesis.supervisor}" 
+                               th:href="@{'/teachers/'+${thesis.supervisor.id}}" 
+                               th:text="${thesis.supervisor.name}"></a>
+                        </td>
+                        <td th:text="${#temporals.format(thesis.uploadDate, 'dd-MM-yyyy HH:mm')}"></td>
                         <td>
-                            <span th:class="${'badge ' + 
-                                (thesis.status == 'ACCEPTED' ? 'bg-success' : 
-                                (thesis.status == 'REJECTED' ? 'bg-danger' : 'bg-warning'))}"
-                                th:text="${thesis.status}">
-                            </span>
+                            <a th:if="${thesis.review != null && thesis.review.isPositive}"
+                               th:href="@{/thesis-reviews/{id}(id=${thesis.review.id})}"
+                               class="badge bg-success text-decoration-none">
+                                Positive
+                            </a>
+                            <a th:if="${thesis.review != null && !thesis.review.isPositive}"
+                               th:href="@{/thesis-reviews/{id}(id=${thesis.review.id})}"
+                               class="badge bg-danger text-decoration-none">
+                                Negative
+                            </a>
+                            <a th:if="${thesis.review == null}"
+                               th:href="@{/thesis-reviews/new(thesisId=${thesis.id})}"
+                               class="badge bg-info text-decoration-none">
+                                Click to review
+                            </a>
                         </td>
                     </tr>
                 </tbody>

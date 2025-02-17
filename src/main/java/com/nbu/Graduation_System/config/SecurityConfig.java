@@ -45,6 +45,9 @@ public class SecurityConfig {
                     .requestMatchers("/my-thesis/**").hasRole("STUDENT")
                     // Teacher specific pages
                     .requestMatchers("/thesis-applications/**").hasRole("TEACHER")
+                    // .requestMatchers("/theses/**").hasRole("TEACHER")
+                    // .requestMatchers("/thesis-reviews/**").hasRole("TEACHER")
+                    // .requestMatchers("/thesis-defenses/**").hasRole("TEACHER")
                     .requestMatchers("/teachers/**").hasRole("TEACHER")
                     .requestMatchers("/students/**").hasRole("TEACHER")
                     .requestMatchers("/departments/**").hasRole("TEACHER")

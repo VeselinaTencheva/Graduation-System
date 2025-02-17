@@ -118,14 +118,14 @@ public class DbInit implements CommandLineRunner {
         thesis.setThesisApplication(application);
         return thesisRepository.save(thesis);
     }
-
+// 
     private ThesisReview createThesisReview(Thesis thesis, Teacher reviewer, boolean isPositive, String content) {
         ThesisReview review = new ThesisReview();
         review.setThesis(thesis);
         review.setReviewer(reviewer);
         review.setPositive(isPositive);
-        review.setContent(content);
-        review.setSubmissionDate(LocalDateTime.now());
+        review.setComments(content);
+        review.setReviewDate(LocalDateTime.now());
         return thesisReviewRepository.save(review);
     }
 

@@ -22,7 +22,7 @@
                     <div class="col-sm-9" th:text="${thesis.id}"></div>
                 </div>
                 <div class="row mb-3">
-                    <div class="col-sm-3"><strong>Description:</strong></div>
+                    <div class="col-sm-3"><strong>Content:</strong></div>
                     <div class="col-sm-9" th:text="${thesis.content}"></div>
                 </div>
                 <div class="row mb-3">
@@ -42,8 +42,24 @@
                     </div>
                 </div>
                 <div class="row mb-3">
-                    <div class="col-sm-3"><strong>Status:</strong></div>
-                    <div class="col-sm-9" th:text="${thesis.status}"></div>
+                    <div class="col-sm-3"><strong>Review Status:</strong></div>
+                    <div class="col-sm-9">
+                        <a th:if="${thesis.review != null && thesis.review.isPositive}"
+                            th:href="@{/thesis-reviews/{id}(id=${thesis.review.id})}"
+                            class="badge bg-success text-decoration-none">
+                            Positive
+                        </a>
+                        <a th:if="${thesis.review != null && !thesis.review.isPositive}"
+                            th:href="@{/thesis-reviews/{id}(id=${thesis.review.id})}"
+                            class="badge bg-danger text-decoration-none">
+                            Negative
+                        </a>
+                        <a th:if="${thesis.review == null}"
+                            th:href="@{/thesis-reviews/new(thesisId=${thesis.id})}"
+                            class="badge bg-info text-decoration-none">
+                            Click to review
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
