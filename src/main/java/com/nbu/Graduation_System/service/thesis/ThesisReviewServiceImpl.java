@@ -77,6 +77,14 @@ public class ThesisReviewServiceImpl implements ThesisReviewService {
         thesisReviewRepository.delete(review);
     }
 
+    @Override
+    public List<ThesisReviewDto> findByStudentId(Long studentId) {
+        return mapperUtil.mapList(
+            thesisReviewRepository.findByThesis_ThesisApplication_Student_Id(studentId),
+            ThesisReviewDto.class
+        );
+    }
+
     // @Override
     // public boolean existsById(Long id) {
     //     return thesisReviewRepository.existsById(id);

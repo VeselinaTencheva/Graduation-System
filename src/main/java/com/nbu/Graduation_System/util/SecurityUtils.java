@@ -52,4 +52,12 @@ public class SecurityUtils {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return (User) authentication.getPrincipal();
     }
+
+    public boolean isTeacher() {
+        return getCurrentUserEntity().getRole() == UserRoleType.TEACHER;
+    }
+
+    public boolean isStudent() {
+        return getCurrentUserEntity().getRole() == UserRoleType.STUDENT;
+    }
 }

@@ -2,7 +2,9 @@ package com.nbu.Graduation_System.controller.mvc;
 
 import com.nbu.Graduation_System.service.thesis.ThesisService;
 import com.nbu.Graduation_System.util.MapperUtil;
+import com.nbu.Graduation_System.util.SecurityUtils;
 import com.nbu.Graduation_System.viewmodel.thesis.ThesisViewModel;
+import com.nbu.Graduation_System.viewmodel.student.StudentViewModel;
 
 import java.util.List;
 
@@ -19,20 +21,43 @@ public class ThesisController {
     
     private final ThesisService thesisService;
     private final MapperUtil mapperUtil;
+    private final SecurityUtils securityUtils;
 
    
     @GetMapping
     public String listTheses(Model model) {
-        List<ThesisViewModel> theses = mapperUtil
-                .mapList(this.thesisService.findAll(), ThesisViewModel.class);
+        List<ThesisViewModel> theses;
+        
+        if (securityUtils.isStudent()) {
+            StudentViewModel currentStudent = securityUtils.getCurrentStudent();
+            theses = mapperUtil.mapList(
+                this.thesisService.findAll().stream()
+                    .filter(thesis -> thesis.getThesisApplication().getStudent().getId().equals(currentStudent.getId()))
+                    .toList(), 
+                ThesisViewModel.class
+            );
+        } else {
+            theses = mapperUtil.mapList(this.thesisService.findAll(), ThesisViewModel.class);
+        }
+        
         model.addAttribute("theses", theses);
         return "/theses/list";
     }
 
     @GetMapping("/{id}")
     public String viewThesis(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("thesis", mapperUtil.getModelMapper().map(
-                thesisService.findById(id), ThesisViewModel.class));
+        ThesisViewModel thesis = mapperUtil.getModelMapper().map(
+            thesisService.findById(id), ThesisViewModel.class);
+        
+        // If user is a student, verify ownership
+        if (securityUtils.isStudent()) {
+            StudentViewModel currentStudent = securityUtils.getCurrentStudent();
+            if (!thesis.getThesisApplication().getStudent().getId().equals(currentStudent.getId())) {
+                return "redirect:/unauthorized";
+            }
+        }
+        
+        model.addAttribute("thesis", thesis);
         return "theses/view";
     }
 

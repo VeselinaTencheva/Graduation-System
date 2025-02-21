@@ -8,6 +8,7 @@ import com.nbu.Graduation_System.viewmodel.thesis_review.ThesisReviewViewModel;
 
 import jakarta.validation.Valid;
 
+import com.nbu.Graduation_System.viewmodel.student.StudentViewModel;
 import com.nbu.Graduation_System.viewmodel.teacher.TeacherViewModel;
 import com.nbu.Graduation_System.viewmodel.thesis.ThesisViewModel;
 import com.nbu.Graduation_System.viewmodel.thesis_review.CreateThesisReviewViewModel;
@@ -37,17 +38,37 @@ public class ThesisReviewController {
     private final SecurityUtils securityUtils;
 
     @GetMapping
-    public String listThesesReviews(Model model) {
-                List<ThesisReviewViewModel> reviews = mapperUtil
-            .mapList(this.thesisReviewService.findAll(), ThesisReviewViewModel.class);
-        model.addAttribute("reviews", reviews);
-    return "theses-reviews/list";
+    public String listReviews(Model model) {
+        if (securityUtils.isStudent()) {
+            StudentViewModel currentStudent = securityUtils.getCurrentStudent();
+            List<ThesisReviewViewModel> reviews = mapperUtil.mapList(
+                thesisReviewService.findByStudentId(currentStudent.getId()), 
+                ThesisReviewViewModel.class
+            );
+            model.addAttribute("reviews", reviews);
+        } else {
+            List<ThesisReviewViewModel> reviews = mapperUtil.mapList(
+                thesisReviewService.findAll(), 
+                ThesisReviewViewModel.class
+            );
+            model.addAttribute("reviews", reviews);
+        }
+        return "theses-reviews/list";
     }
 
     @GetMapping("/{id}")
     public String viewReview(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("review", mapperUtil.getModelMapper().map(
-                thesisReviewService.findById(id), ThesisReviewViewModel.class));
+        ThesisReviewViewModel review = mapperUtil.getModelMapper().map(
+            thesisReviewService.findById(id), ThesisReviewViewModel.class);
+        
+        if (securityUtils.isStudent()) {
+            StudentViewModel currentStudent = securityUtils.getCurrentStudent();
+            if (!review.getThesis().getThesisApplication().getStudent().getId().equals(currentStudent.getId())) {
+                return "redirect:/unauthorized";
+            }
+        }
+        
+        model.addAttribute("review", review);
         return "theses-reviews/view";
     }
 

@@ -42,12 +42,15 @@ public class SecurityConfig {
                     // Public pages
                     .requestMatchers("/login", "/css/**", "/js/**", "/unauthorized").permitAll()
                     // Student specific pages
-                    .requestMatchers("/my-thesis/**").hasRole("STUDENT")
+                    .requestMatchers("/my-thesis/**", "/theses/**", "/thesis-reviews/**").hasAnyRole("STUDENT", "TEACHER")
                     // Teacher specific pages
                     .requestMatchers("/thesis-applications/**").hasRole("TEACHER")
-                    // .requestMatchers("/theses/**").hasRole("TEACHER")
-                    // .requestMatchers("/thesis-reviews/**").hasRole("TEACHER")
-                    // .requestMatchers("/thesis-defenses/**").hasRole("TEACHER")
+                    .requestMatchers("/thesis-reviews/new/**").hasRole("TEACHER")
+                    .requestMatchers("/thesis-reviews/edit/**").hasRole("TEACHER")
+                    .requestMatchers("/thesis-reviews/delete/**").hasRole("TEACHER")
+                    .requestMatchers("/thesis-defenses/new/**").hasRole("TEACHER")
+                    .requestMatchers("/thesis-defenses/edit/**").hasRole("TEACHER")
+                    .requestMatchers("/thesis-defenses/delete/**").hasRole("TEACHER")
                     .requestMatchers("/teachers/**").hasRole("TEACHER")
                     .requestMatchers("/students/**").hasRole("TEACHER")
                     .requestMatchers("/departments/**").hasRole("TEACHER")

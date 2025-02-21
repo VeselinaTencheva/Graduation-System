@@ -10,6 +10,7 @@ public interface ThesisReviewService {
     ThesisReviewDto findById(Long id);
     ThesisReviewDto findByThesisId(Long thesisId);
     List<ThesisReviewDto> findAll();
+    List<ThesisReviewDto> findByStudentId(Long studentId);
     void deleteById(Long id);
     // boolean existsById(Long id);
     // Set<ThesisReviewDto> findByThesisId(Long thesisId);
