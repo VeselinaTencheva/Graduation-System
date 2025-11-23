@@ -73,7 +73,7 @@ public class DbInit implements CommandLineRunner {
         teacher.setRole(UserRoleType.TEACHER);
         teacher.setAcademicTitle(academicTitle);
         teacher.setPassword(encoder.encode("password"));
-        teacher.setSupervisedTheses(new ArrayList<>());
+        teacher.setSupervisedThesis(new ArrayList<>());
         teacher.setReviews(new ArrayList<>());
         teacher.setDepartment(departmentRepository.findByType(departmentType)
                 .orElseThrow(() -> new RuntimeException("Department not found: " + departmentType)));
