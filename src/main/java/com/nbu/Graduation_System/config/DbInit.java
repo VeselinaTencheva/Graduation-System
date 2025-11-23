@@ -23,6 +23,12 @@ import java.util.Set;
 public class DbInit implements CommandLineRunner {
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
     private TeacherRepository teacherRepository;
 
     @Autowired
@@ -43,11 +49,23 @@ public class DbInit implements CommandLineRunner {
     @Autowired
     private DepartmentRepository departmentRepository;
 
-    @Autowired
-    private PasswordEncoder encoder;
+    private void createSuperAdminIfNotExists() {
+        // TODO considering moving these to env files
+        String email ="superadmin@example.com";
+        String rawPassword = "superadmin";
 
+        if (userRepository.existsByEmail(email)) {
+            return; // already exists
+        }
 
-    public DbInit() {
+        User superUser = new User();
+        superUser.setName("Super Admin");
+        superUser.setEmail(email);
+        superUser.setPassword(passwordEncoder.encode(rawPassword));
+        superUser.setRole(UserRoleType.ADMIN);
+        superUser.setEnabled(true);
+
+        userRepository.save(superUser);
     }
 
     @Transactional
@@ -72,7 +90,7 @@ public class DbInit implements CommandLineRunner {
         teacher.setEmail(email);
         teacher.setRole(UserRoleType.TEACHER);
         teacher.setAcademicTitle(academicTitle);
-        teacher.setPassword(encoder.encode("password"));
+        teacher.setPassword(passwordEncoder.encode("password"));
         teacher.setSupervisedTheses(new ArrayList<>());
         teacher.setReviews(new ArrayList<>());
         teacher.setDepartment(departmentRepository.findByType(departmentType)
@@ -85,7 +103,7 @@ public class DbInit implements CommandLineRunner {
         student.setName(name);
         student.setEmail(email);
         student.setRole(UserRoleType.STUDENT);
-        student.setPassword(encoder.encode("password"));
+        student.setPassword(passwordEncoder.encode("password"));
         student.setDepartment(departmentRepository.findByType(departmentType)
                 .orElseThrow(() -> new RuntimeException("Department not found: " + departmentType)));
         return studentRepository.save(student);
@@ -141,6 +159,7 @@ public class DbInit implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) {
+        createSuperAdminIfNotExists();
         createDepartments();
         // Only initialize if the database is empty
         if (teacherRepository.count() > 0 || studentRepository.count() > 0) {

@@ -1,6 +1,7 @@
 package com.nbu.Graduation_System.controller.mvc;
 
 import com.nbu.Graduation_System.dto.teacher.CreateTeacherDto;
+import com.nbu.Graduation_System.dto.teacher.UpdateTeacherDto;
 import com.nbu.Graduation_System.entity.enums.ThesisApplicationStatusType;
 import com.nbu.Graduation_System.service.teacher.TeacherService;
 import com.nbu.Graduation_System.service.department.DepartmentService;
@@ -9,6 +10,7 @@ import com.nbu.Graduation_System.service.thesis.ThesisDefenseService;
 import com.nbu.Graduation_System.util.MapperUtil;
 import com.nbu.Graduation_System.viewmodel.department.DepartmentViewModel;
 import com.nbu.Graduation_System.viewmodel.teacher.CreateTeacherViewModel;
+import com.nbu.Graduation_System.viewmodel.teacher.UpdateTeacherViewModel;
 import com.nbu.Graduation_System.viewmodel.teacher.TeacherViewModel;
 import com.nbu.Graduation_System.viewmodel.thesis_application.ThesisApplicationViewModel;
 import com.nbu.Graduation_System.viewmodel.thesis_defense.ThesisDefenseViewModel;
@@ -99,9 +101,61 @@ public class TeacherViewController {
         }
     }
 
+  @GetMapping("/{id}/update")
+    public String showUpdateForm(@PathVariable("id") Long id, Model model) {
+        TeacherViewModel existing = mapperUtil.getModelMapper()
+                .map(teacherService.findById(id), TeacherViewModel.class);
+
+        UpdateTeacherViewModel formModel = new UpdateTeacherViewModel();
+        formModel.setName(existing.getName());
+        formModel.setEmail(existing.getEmail());
+        formModel.setAcademicTitle(existing.getAcademicTitle());
+        formModel.setDepartmentId(existing.getDepartment().getId());
+
+        model.addAttribute("teacher", formModel);
+        model.addAttribute("teacherId", id);
+        model.addAttribute("departments",
+                mapperUtil.mapList(departmentService.findAll(), DepartmentViewModel.class));
+
+        return "teachers/update";
+    }
+
+    @PutMapping("/{id}")
+    public String updateTeacher(
+            @PathVariable("id") Long id,
+            @Valid @ModelAttribute("teacher") UpdateTeacherViewModel teacher,
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes,
+            Model model) {
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("departments",
+                    mapperUtil.mapList(departmentService.findAll(), DepartmentViewModel.class));
+            return "teachers/update";
+        }
+
+        try {
+            UpdateTeacherDto dto = mapperUtil.getModelMapper().map(teacher, UpdateTeacherDto.class);
+            teacherService.update(id, dto);
+
+            redirectAttributes.addFlashAttribute("success", "Teacher updated successfully!");
+            return "redirect:/teachers";
+        } catch (Exception e) {
+            model.addAttribute("departments",
+                    mapperUtil.mapList(departmentService.findAll(), DepartmentViewModel.class));
+            model.addAttribute("error", "Failed to update teacher: " + e.getMessage());
+            return "teachers/update";
+        }
+    }
+
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable("id") Long id) {
-        this.teacherService.deleteById(id);
+    public String delete(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+        try {
+            this.teacherService.deleteById(id);
+            redirectAttributes.addFlashAttribute("success", "Teacher deleted successfully!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Failed to delete teacher: " + e.getMessage());
+        }
         return "redirect:/teachers";
     }
 }

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: header('Update Teacher')">
+</head>
+<body>
+<nav th:replace="fragments/layout :: navigation"></nav>
+
+<div class="container">
+    <h2>Update Teacher</h2>
+
+    <div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}">
+        Error message
+    </div>
+
+    <div th:if="${success}" class="alert alert-success" role="alert" th:text="${success}">
+        Success message
+    </div>
+
+    <!-- teacherId is added in the controller -->
+    <form th:action="@{/teachers/{id}(id=${teacherId})}"
+          th:object="${teacher}"
+          method="put">
+
+        <div class="mb-3">
+            <label for="name" class="form-label">Name *</label>
+            <input type="text"
+                   class="form-control"
+                   th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'"
+                   id="name"
+                   th:field="*{name}"
+                   required>
+            <div class="invalid-feedback"
+                 th:if="${#fields.hasErrors('name')}"
+                 th:errors="*{name}">
+                Name is required
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="email" class="form-label">Email *</label>
+            <input type="email"
+                   class="form-control"
+                   th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'"
+                   id="email"
+                   th:field="*{email}"
+                   required>
+            <div class="invalid-feedback"
+                 th:if="${#fields.hasErrors('email')}"
+                 th:errors="*{email}">
+                Valid email is required
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="password" class="form-label">New Password (optional)</label>
+            <input type="password"
+                   class="form-control"
+                   th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'"
+                   id="password"
+                   th:field="*{password}">
+            <div class="form-text">
+                Leave empty to keep the current password.
+            </div>
+            <div class="invalid-feedback"
+                 th:if="${#fields.hasErrors('password')}"
+                 th:errors="*{password}">
+                Password is invalid
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="academicTitle" class="form-label">Academic Title *</label>
+            <input type="text"
+                   class="form-control"
+                   th:classappend="${#fields.hasErrors('academicTitle')} ? 'is-invalid'"
+                   id="academicTitle"
+                   th:field="*{academicTitle}"
+                   required>
+            <div class="invalid-feedback"
+                 th:if="${#fields.hasErrors('academicTitle')}"
+                 th:errors="*{academicTitle}">
+                Academic title is required
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="departmentId" class="form-label">Department *</label>
+            <select class="form-select"
+                    id="departmentId"
+                    th:field="*{departmentId}"
+                    th:errorclass="is-invalid">
+                <option value="">Select Department</option>
+                <option th:each="dept : ${departments}"
+                        th:value="${dept.id}"
+                        th:text="${dept.type.name}">
+                    Department Name
+                </option>
+            </select>
+            <div class="invalid-feedback"
+                 th:if="${#fields.hasErrors('departmentId')}"
+                 th:errors="*{departmentId}">
+                Please select a department
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Update Teacher</button>
+        <a th:href="@{/teachers}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
+<div th:replace="fragments/layout :: footer"></div>
+<div th:replace="fragments/layout :: scripts"></div>
+</body>
+</html>

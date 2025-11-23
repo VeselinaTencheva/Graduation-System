@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-@Configuration
 public class MapperUtil {
     private final ModelMapper modelMapper;
 

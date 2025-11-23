@@ -20,19 +20,17 @@ import com.nbu.Graduation_System.service.user.UserService;
 @EnableMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfig {
 
-        private final UserService userService;
-
         @Bean
         public PasswordEncoder passwordEncoder() {
                 return new BCryptPasswordEncoder();
         }
 
         @Bean
-        public DaoAuthenticationProvider authProvider() {
-                DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-                authProvider.setUserDetailsService(userService);
-                authProvider.setPasswordEncoder(passwordEncoder());
-                return authProvider;
+        public DaoAuthenticationProvider authProvider(UserService userService, PasswordEncoder passwordEncoder) {
+            DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+            authProvider.setUserDetailsService(userService);
+            authProvider.setPasswordEncoder(passwordEncoder);
+            return authProvider;
         }
 
         @Bean
@@ -41,32 +39,47 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                     // Public pages
                     .requestMatchers("/login", "/css/**", "/js/**", "/unauthorized").permitAll()
-                    // Student specific pages
-                    .requestMatchers("/my-thesis/**", "/theses/**", "/thesis-reviews/**").hasAnyRole("STUDENT", "TEACHER")
-                    // Teacher specific pages
-                    .requestMatchers("/thesis-applications/**").hasRole("TEACHER")
-                    .requestMatchers("/thesis-reviews/new/**").hasRole("TEACHER")
-                    .requestMatchers("/thesis-reviews/edit/**").hasRole("TEACHER")
-                    .requestMatchers("/thesis-reviews/delete/**").hasRole("TEACHER")
-                    .requestMatchers("/thesis-defenses/new/**").hasRole("TEACHER")
-                    .requestMatchers("/thesis-defenses/edit/**").hasRole("TEACHER")
-                    .requestMatchers("/thesis-defenses/delete/**").hasRole("TEACHER")
-                    .requestMatchers("/teachers/**").hasRole("TEACHER")
-                    .requestMatchers("/students/**").hasRole("TEACHER")
-                    .requestMatchers("/departments/**").hasRole("TEACHER")
-                    // Authenticated pages
-                    .anyRequest().authenticated())
+
+                    // API – only ADMIN should access user API
+                    .requestMatchers("/api/users/**").hasRole("ADMIN")
+                    .requestMatchers("/api/teachers/**").hasAnyRole("TEACHER", "ADMIN")
+                    .requestMatchers("/api/students/**").hasAnyRole("TEACHER", "ADMIN")
+
+                    // Student + Teacher pages (also allow ADMIN)
+                    .requestMatchers("/my-thesis/**", "/theses/**", "/thesis-reviews/**")
+                        .hasAnyRole("STUDENT", "TEACHER", "ADMIN")
+
+                    // Teacher specific pages (also allow ADMIN)
+                    .requestMatchers("/thesis-applications/**").hasAnyRole("TEACHER", "ADMIN")
+                    .requestMatchers("/thesis-reviews/new/**").hasAnyRole("TEACHER", "ADMIN")
+                    .requestMatchers("/thesis-reviews/edit/**").hasAnyRole("TEACHER", "ADMIN")
+                    .requestMatchers("/thesis-reviews/delete/**").hasAnyRole("TEACHER", "ADMIN")
+                    .requestMatchers("/thesis-defenses/new/**").hasAnyRole("TEACHER", "ADMIN")
+                    .requestMatchers("/thesis-defenses/edit/**").hasAnyRole("TEACHER", "ADMIN")
+                    .requestMatchers("/thesis-defenses/delete/**").hasAnyRole("TEACHER", "ADMIN")
+                    .requestMatchers("/teachers/**").hasAnyRole("ADMIN")
+                    .requestMatchers("/students/**").hasAnyRole("TEACHER", "ADMIN")
+                    .requestMatchers("/departments/**").hasAnyRole("TEACHER", "ADMIN")
+
+                    // Any other request just needs to be authenticated
+                    .anyRequest().authenticated()
+                )
                 .formLogin(form -> form
                     .loginPage("/login")
                     .defaultSuccessUrl("/")
                     .permitAll()
                 )
+                .httpBasic(customizer -> {})   // 🔹 enable HTTP Basic for APIs
                 .logout(logout -> logout
                     .logoutSuccessUrl("/login")
-                    .permitAll())
+                    .permitAll()
+                )
                 .exceptionHandling(ex -> ex
-                    .accessDeniedPage("/unauthorized"));
-        
+                    .accessDeniedPage("/unauthorized")
+                );
+
             return http.build();
         }
+
+
 }

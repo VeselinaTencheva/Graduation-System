@@ -1,53 +1,62 @@
-// package com.nbu.Graduation_System.controller.api;
+package com.nbu.Graduation_System.controller.api;
 
-// import com.nbu.Graduation_System.dto.UserDto;
-// import com.nbu.Graduation_System.service.user.UserService;
-// import org.springframework.http.ResponseEntity;
-// import org.springframework.web.bind.annotation.*;
-// import java.util.List;
+import com.nbu.Graduation_System.dto.user.CreateUserDto;
+import com.nbu.Graduation_System.dto.user.UpdateUserDto;
+import com.nbu.Graduation_System.dto.user.UserDto;
+import com.nbu.Graduation_System.service.user.UserService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
-// @RestController
-// @RequestMapping("/api/users")
-// public class UserApiController {
-    
-//     private final UserService userService;
+import java.net.URI;
+import java.util.List;
 
-//     public UserApiController(UserService userService) {
-//         this.userService = userService;
-//     }
+@RestController
+@RequestMapping("/api/users")
+@RequiredArgsConstructor
+public class UserApiController {
 
-//     @GetMapping
-//     public ResponseEntity<List<UserDto>> getAllUsers() {
-//         return ResponseEntity.ok(userService.findAll());
-//     }
+    private final UserService userService;
 
-//     @GetMapping("/{id}")
-//     public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
-//         return userService.findById(id)
-//                 .map(ResponseEntity::ok)
-//                 .orElse(ResponseEntity.notFound().build());
-//     }
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping
+    public List<UserDto> getAllUsers() {
+        return userService.findAll();
+    }
 
-//     @PostMapping
-//     public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
-//         return ResponseEntity.ok(userService.save(userDto));
-//     }
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/by-email")
+    public ResponseEntity<UserDto> getByEmail(@RequestParam String email) {
+        // service throws if not found; you can wrap in try/catch if you prefer 404
+        UserDto dto = userService.findByEmail(email);
+        return ResponseEntity.ok(dto);
+    }
 
-//     @PutMapping("/{id}")
-//     public ResponseEntity<UserDto> updateUser(@PathVariable Long id, @RequestBody UserDto userDto) {
-//         if (!userService.existsById(id)) {
-//             return ResponseEntity.notFound().build();
-//         }
-//         userDto.setId(id);
-//         return ResponseEntity.ok(userService.save(userDto));
-//     }
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping()
+    public ResponseEntity<UserDto> createUser(@Valid @RequestBody CreateUserDto request) {
+        UserDto created = userService.createUser(request);
+        return ResponseEntity
+                .created(URI.create("/api/users/" + created.getId()))
+                .body(created);
+    }
 
-//     @DeleteMapping("/{id}")
-//     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-//         if (!userService.existsById(id)) {
-//             return ResponseEntity.notFound().build();
-//         }
-//         userService.deleteById(id);
-//         return ResponseEntity.ok().build();
-//     }
-// }
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDto> updateUser(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateUserDto request
+    ) {
+        UserDto updated = userService.updateUser(id, request);
+        return ResponseEntity.ok(updated);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
+    }
+}

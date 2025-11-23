@@ -12,7 +12,7 @@
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h3 class="card-title mb-0">Teacher Details</h3>
                 <div class="d-flex gap-2">
-                    <a th:href="@{/teachers/{id}/edit(id=${teacher.id})}" class="btn btn-warning">Edit</a>
+                    <a th:href="@{/teachers/{id}/update(id=${teacher.id})}" class="btn btn-warning">Update</a>
                     <a th:href="@{'/teachers/delete/'+${teacher.id}}" class="btn btn-danger">Delete</a>
                 </div>
             </div>

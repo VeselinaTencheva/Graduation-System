@@ -1,6 +1,7 @@
 package com.nbu.Graduation_System.controller.mvc;
 
 import com.nbu.Graduation_System.dto.student.CreateStudentDto;
+import com.nbu.Graduation_System.dto.student.UpdateStudentDto;
 import com.nbu.Graduation_System.service.student.StudentService;
 import com.nbu.Graduation_System.service.department.DepartmentService;
 
@@ -13,6 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.nbu.Graduation_System.util.MapperUtil;
 import com.nbu.Graduation_System.viewmodel.department.DepartmentViewModel;
 import com.nbu.Graduation_System.viewmodel.student.CreateStudentViewModel;
+import com.nbu.Graduation_System.viewmodel.student.UpdateStudentViewModel;
 import com.nbu.Graduation_System.viewmodel.student.StudentViewModel;
 
 import jakarta.validation.Valid;
@@ -71,6 +73,38 @@ public class StudentViewController {
         } catch (Exception e) {
             model.addAttribute("departments", mapperUtil.mapList(departmentService.findAll(), DepartmentViewModel.class));
             model.addAttribute("error", "Failed to create student: " + e.getMessage());
+            return "students/form";
+        }
+    }
+
+    @GetMapping("/{id}/edit")
+    public String update(@PathVariable("id") Long id, Model model) {
+        model.addAttribute("student", new CreateStudentViewModel());
+        model.addAttribute("departments", mapperUtil.mapList(departmentService.findAll(), DepartmentViewModel.class));
+        return "students/form";
+    }
+
+    @PutMapping("/{id}")
+    public String updateStudent(
+            @PathVariable("id") Long id,
+            @Valid @ModelAttribute("student") UpdateStudentViewModel student,
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes,
+            Model model) {
+        
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("departments", mapperUtil.mapList(departmentService.findAll(), DepartmentViewModel.class));
+            return "students/form";
+        }
+
+        try {
+            UpdateStudentDto dto = mapperUtil.getModelMapper().map(student, UpdateStudentDto.class);
+            studentService.update(id, dto);
+            redirectAttributes.addFlashAttribute("success", "Student updated successfully!");
+            return "redirect:/students";
+        } catch (Exception e) {
+            model.addAttribute("departments", mapperUtil.mapList(departmentService.findAll(), DepartmentViewModel.class));
+            model.addAttribute("error", "Failed to update student: " + e.getMessage());
             return "students/form";
         }
     }
