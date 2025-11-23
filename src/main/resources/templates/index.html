@@ -12,7 +12,7 @@
             <p class="lead">Manage students, teachers, and theses in one place</p>
         </div>
         
-        <!-- <div class="row mb-4">
+        <div class="row mb-4">
             <div class="col-md-4 mb-3">
                 <div class="card h-100">
                     <div class="card-body">
@@ -22,7 +22,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="col-md-4 mb-3">
                 <div class="card h-100">
                     <div class="card-body">
@@ -64,7 +64,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="col-md-4 mb-3">
                 <div class="card h-100">
                     <div class="card-body">
@@ -75,7 +75,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="container mt-4">
             <div sec:authorize="hasRole('STUDENT')" th:if="${thesisApplications != null}">
                 <h2>Your Thesis Applications</h2>
@@ -100,11 +100,11 @@
                 <h2>Supervised Thesis Applications</h2>
                 <div class="row">
                     <div class="col-12">
-                        <div th:if="${teacherWithTheses.supervisedTheses.empty}" class="alert alert-info">
+                        <div th:if="${teacherWithTheses.supervisedThesis.empty}" class="alert alert-info">
                             You don't have any thesis applications to supervise yet.
                         </div>
-                        <div th:if="${!teacherWithTheses.supervisedTheses.empty}" class="list-group">
-                            <div th:each="thesis : ${teacherWithTheses.supervisedTheses}" class="list-group-item">
+                        <div th:if="${!teacherWithTheses.supervisedThesis.empty}" class="list-group">
+                            <div th:each="thesis : ${teacherWithTheses.supervisedThesis}" class="list-group-item">
                                 <h5 class="mb-1" th:text="${thesis.title}">Title</h5>
                                 <p class="mb-1" th:text="${thesis.description}">Description</p>
                                 <small th:text="'Student: ' + ${thesis.student.name}">Student</small>
@@ -121,7 +121,7 @@
                     </div>
                 </div>
             </div>
-        </div> -->
+        </div>
     </div>
 
     <footer th:replace="~{fragments/layout :: footer}"></footer>

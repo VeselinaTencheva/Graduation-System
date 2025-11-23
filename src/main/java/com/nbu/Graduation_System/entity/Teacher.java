@@ -17,7 +17,7 @@ public class Teacher extends User {
     private String academicTitle;
     
     @OneToMany(mappedBy = "supervisor")
-    private List<ThesisApplication> supervisedTheses;
+    private List<ThesisApplication> supervisedThesis;
     
     @OneToMany(mappedBy = "reviewer")
     private List<ThesisReview> reviews;
