@@ -53,6 +53,14 @@ public class TeacherViewController {
         return "/teachers/view";
     }
 
+    @GetMapping("/by-department/{id}")
+    public String listTeachersByDepartmentId(@PathVariable("id") Long id, Model model) {
+        List<TeacherViewModel> teachers = mapperUtil
+                .mapList(this.teacherService.findAllByDepartmentId(id), TeacherViewModel.class);
+        model.addAttribute("teachers", teachers);
+        return "/teachers/list";
+    }
+
     @GetMapping("/{id}/applications")
     public String listThesisApplicationsByTeacherId(@PathVariable("id") Long id, Model model) {
         List<ThesisApplicationViewModel> applications = mapperUtil.mapList(

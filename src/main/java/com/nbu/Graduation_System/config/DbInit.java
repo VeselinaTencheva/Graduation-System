@@ -49,10 +49,9 @@ public class DbInit implements CommandLineRunner {
     @Autowired
     private DepartmentRepository departmentRepository;
 
-    private void createSuperAdminIfNotExists() {
-        // TODO considering moving these to env files
-        String email ="superadmin@example.com";
-        String rawPassword = "superadmin";
+   private void createSuperAdminIfNotExists() {
+        String email = System.getenv().getOrDefault("SUPERADMIN_EMAIL", "superadmin@example.com");
+        String rawPassword = System.getenv().getOrDefault("SUPERADMIN_PASSWORD", "superadmin");
 
         if (userRepository.existsByEmail(email)) {
             return; // already exists
@@ -69,7 +68,7 @@ public class DbInit implements CommandLineRunner {
     }
 
     @Transactional
-    public void createDepartments() {
+    public void createDepartmentsIfNotExists() {
         // Skip if departments already exist
         if (departmentRepository.count() > 0) {
             return;
@@ -160,33 +159,33 @@ public class DbInit implements CommandLineRunner {
     @Transactional
     public void run(String... args) {
         createSuperAdminIfNotExists();
-        createDepartments();
+        createDepartmentsIfNotExists();
+
         // Only initialize if the database is empty
         if (teacherRepository.count() > 0 || studentRepository.count() > 0) {
             return;
         }
 
         // Create teachers
-        Teacher johnDoe = createTeacher(
-            "John Doe", 
-            "john.doe@nbu.bg", 
-            "Professor",
-            DepartmentType.COMPUTER_SCIENCE
-        );
+        Teacher johnDoe = createTeacher("John Doe", "john.doe@nbu.bg", "Professor", DepartmentType.COMPUTER_SCIENCE);
+        Teacher janeSmith = createTeacher("Jane Smith", "jane.smith@nbu.bg", "Associate Professor", DepartmentType.INFORMATICS);
+        Teacher peterBrown = createTeacher("Peter Brown", "peter.brown@nbu.bg", "Assistant Professor", DepartmentType.INFORMATION_TECHNOLOGIES);
+        Teacher mikeSimpson = createTeacher("Mike Simpson", "mike.simpson@nbu.bg", "Professor", DepartmentType.COMPUTER_SCIENCE);
+        Teacher sarahConnor = createTeacher("Sarah Connor", "sarah.connor@nbu.bg", "Professor", DepartmentType.INFORMATICS);
+        Teacher davidMiller = createTeacher("David Miller", "david.miller@nbu.bg", "Professor", DepartmentType.INFORMATION_TECHNOLOGIES);
 
-        Teacher janeSmith = createTeacher(
-            "Jane Smith", 
-            "jane.smith@nbu.bg", 
-            "Associate Professor",
-            DepartmentType.INFORMATICS
-        );
+        // Assign deans to departments
+        Department csDept = departmentRepository.findByType(DepartmentType.COMPUTER_SCIENCE).orElseThrow();
+        csDept.setDean(mikeSimpson);
+        departmentRepository.save(csDept);
 
-        Teacher peterBrown = createTeacher(
-            "Peter Brown", 
-            "peter.brown@nbu.bg", 
-            "Assistant Professor",
-            DepartmentType.INFORMATION_TECHNOLOGIES
-        );
+        Department infoDept = departmentRepository.findByType(DepartmentType.INFORMATICS).orElseThrow();
+        infoDept.setDean(sarahConnor);
+        departmentRepository.save(infoDept);
+
+        Department itDept = departmentRepository.findByType(DepartmentType.INFORMATION_TECHNOLOGIES).orElseThrow();
+        itDept.setDean(davidMiller);
+        departmentRepository.save(itDept);
 
         // Create students
         Student aliceJohnson = createStudent(

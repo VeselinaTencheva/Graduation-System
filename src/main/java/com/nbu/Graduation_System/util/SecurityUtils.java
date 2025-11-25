@@ -7,8 +7,10 @@ import org.springframework.stereotype.Component;
 import com.nbu.Graduation_System.entity.User;
 import com.nbu.Graduation_System.entity.enums.UserRoleType;
 import com.nbu.Graduation_System.service.teacher.TeacherService;
+import com.nbu.Graduation_System.service.user.UserService;
 import com.nbu.Graduation_System.service.student.StudentService;
 import com.nbu.Graduation_System.viewmodel.teacher.TeacherViewModel;
+import com.nbu.Graduation_System.viewmodel.user.UserViewModel;
 import com.nbu.Graduation_System.viewmodel.student.StudentViewModel;
 
 import lombok.AllArgsConstructor;
@@ -19,6 +21,7 @@ public class SecurityUtils {
     
     private final TeacherService teacherService;
     private final StudentService studentService;
+    private final UserService userService;
     private final MapperUtil mapperUtil;
 
     public <T> T getCurrentUser(Class<T> viewModelClass) {
@@ -34,6 +37,11 @@ public class SecurityUtils {
             return viewModelClass.cast(mapperUtil.getModelMapper().map(
                 studentService.findById(user.getId()), 
                 StudentViewModel.class
+            ));
+        } else if (user.getRole() == UserRoleType.ADMIN) {
+            return viewModelClass.cast(mapperUtil.getModelMapper().map(
+                userService.findById(user.getId()), 
+                UserViewModel.class
             ));
         }
         
@@ -59,5 +67,9 @@ public class SecurityUtils {
 
     public boolean isStudent() {
         return getCurrentUserEntity().getRole() == UserRoleType.STUDENT;
+    }
+
+    public boolean isAdmin() {
+        return getCurrentUserEntity().getRole() == UserRoleType.ADMIN;
     }
 }

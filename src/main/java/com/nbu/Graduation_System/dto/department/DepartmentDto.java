@@ -1,9 +1,11 @@
 package com.nbu.Graduation_System.dto.department;
 
 import com.nbu.Graduation_System.entity.enums.DepartmentType;
+import com.nbu.Graduation_System.dto.teacher.TeacherDto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.ToString;
 
 @Data
 public class DepartmentDto {
@@ -19,4 +21,7 @@ public class DepartmentDto {
     // @Size(min = 3, max = 50)
     @NotBlank
     private String contactEmail;
+
+    @ToString.Exclude
+    private TeacherDto dean;
 }

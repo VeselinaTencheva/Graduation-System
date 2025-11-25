@@ -15,4 +15,6 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
            "(SELECT 1 FROM ThesisApplication ta WHERE ta.student = s AND " +
            "(ta.status = 'ACCEPTED' OR ta.status = 'SUBMITTED'))")
     List<Student> findAllEligibleForThesisApplication();
+
+    List<Student> findByDepartmentId(Long deparementId);
 }

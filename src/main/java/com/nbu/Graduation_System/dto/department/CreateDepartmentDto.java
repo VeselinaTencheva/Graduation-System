@@ -1,6 +1,7 @@
 package com.nbu.Graduation_System.dto.department;
 
 import com.nbu.Graduation_System.entity.enums.DepartmentType;
+import com.nbu.Graduation_System.dto.teacher.TeacherDto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -18,4 +19,6 @@ public class CreateDepartmentDto {
     // @Size(min = 3, max = 50)
     @NotBlank
     private String contactEmail;
+
+    private TeacherDto dean;
 }

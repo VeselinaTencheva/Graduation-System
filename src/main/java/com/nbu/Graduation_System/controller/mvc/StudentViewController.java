@@ -46,6 +46,14 @@ public class StudentViewController {
         return "students/view";
     }
 
+    @GetMapping("/by-department/{id}")
+    public String listStudentsByDepartmentId(@PathVariable("id") Long id, Model model) {
+        List<StudentViewModel> students = mapperUtil
+                .mapList(this.studentService.findAllByDepartmentId(id), StudentViewModel.class);
+        model.addAttribute("students", students);
+        return "/students/list";
+    }
+
     @GetMapping("/new")
     public String create(Model model) {
         model.addAttribute("student", new CreateStudentViewModel());

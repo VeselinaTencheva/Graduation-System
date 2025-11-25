@@ -11,10 +11,6 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h3 class="card-title mb-0">Department Details</h3>
-                <div class="d-flex gap-2">
-                    <a th:href="@{/departments/{id}/edit(id=${department.id})}" class="btn btn-warning">Edit</a>
-                    <a th:href="@{'/departments/delete/'+${department.id}}" class="btn btn-danger">Delete</a>
-                </div>
             </div>
             <div class="card-body">
                 <div class="row mb-3">
@@ -33,6 +29,38 @@
                     <div class="col-sm-3"><strong>Contact Email:</strong></div>
                     <div class="col-sm-9" th:text="${department.contactEmail}"></div>
                 </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Dean</strong></div>
+                    <div class="col-sm-9">
+                        <a th:if="${department.dean}" 
+                            th:href="@{'/teachers/'+${department.dean.id}}" 
+                            th:text="${department.dean.name}" />
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Students</strong></div>
+                    <div class="col-sm-9">
+                        <a th:if="${!#lists.isEmpty(department.students)}"
+                        th:href="@{'/students/by-department/' + ${department.id}}"
+                        th:text="${#lists.size(department.students)}">
+                        </a>
+                        <span th:if="${#lists.isEmpty(department.students)}">0</span>
+                    </div>
+                </div>
+
+            
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Teachers</strong></div>
+                    <div class="col-sm-9">
+                        <a th:if="${!#lists.isEmpty(department.teachers)}"
+                        th:href="@{'/teachers/by-department/' + ${department.id}}"
+                        th:text="${#lists.size(department.teachers)}">
+                        </a>
+                        <span th:if="${#lists.isEmpty(department.teachers)}">0</span>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>

@@ -12,6 +12,8 @@ public interface TeacherService {
 
     TeacherDto findById(Long id);
 
+    List<TeacherDto> findAllByDepartmentId(Long departmentId);
+
     List<TeacherDto> findAll();
 
     TeacherDto update(Long id, UpdateTeacherDto dto);

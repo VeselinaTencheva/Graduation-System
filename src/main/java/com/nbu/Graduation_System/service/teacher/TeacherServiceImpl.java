@@ -40,6 +40,15 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
+    public List<TeacherDto> findAllByDepartmentId(Long departmentId) {
+        return mapperUtil.mapList(
+            teacherRepository.findByDepartmentId(departmentId).stream()
+                .toList(), 
+            TeacherDto.class
+        );
+    }
+
+    @Override
     public TeacherDto save(CreateTeacherDto teacherDto) {
         if (userRepository.existsByEmail(teacherDto.getEmail())) {
             throw new RuntimeException("Email already exists: " + teacherDto.getEmail());

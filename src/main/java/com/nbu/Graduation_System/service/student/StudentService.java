@@ -12,6 +12,7 @@ public interface StudentService {
     List<StudentDto> findAll();
     List<StudentDto> findAllEligibleForThesisApplication();
     List<StudentDto> findAllEligibleForThesisApplicationByDepartment(Long departmentId);
+    List<StudentDto> findAllByDepartmentId(Long departmentId);
     StudentDto update(Long id, UpdateStudentDto dto);
     void deleteById(Long id);
     boolean existsById(Long id);

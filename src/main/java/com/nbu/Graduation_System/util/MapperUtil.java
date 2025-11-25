@@ -3,7 +3,6 @@ package com.nbu.Graduation_System.util;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import com.nbu.Graduation_System.dto.thesis_application.CreateThesisApplicationDto;

@@ -56,6 +56,15 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    public List<StudentDto> findAllByDepartmentId(Long departmentId) {
+        return mapperUtil.mapList(
+            studentRepository.findByDepartmentId(departmentId).stream()
+                .toList(), 
+            StudentDto.class
+        );
+    }
+
+    @Override
     public void deleteById(Long id) {
         if (!studentRepository.existsById(id)) {
             throw new RuntimeException("Student with id=" + id + " not found!");

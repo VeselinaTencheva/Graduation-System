@@ -1,11 +1,17 @@
 package com.nbu.Graduation_System.controller.mvc;
 
+import com.nbu.Graduation_System.entity.Teacher;
 import com.nbu.Graduation_System.service.department.DepartmentService;
+import com.nbu.Graduation_System.service.student.StudentService;
+import com.nbu.Graduation_System.service.teacher.TeacherService;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import com.nbu.Graduation_System.util.MapperUtil;
 import com.nbu.Graduation_System.viewmodel.department.DepartmentViewModel;
+import com.nbu.Graduation_System.viewmodel.student.StudentViewModel;
+import com.nbu.Graduation_System.viewmodel.teacher.TeacherViewModel;
 
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -15,12 +21,15 @@ import lombok.AllArgsConstructor;
 @RequestMapping("/departments")
 public class DepartmentController {
     private final DepartmentService departmentService;
+    private final TeacherService teacherService;
+    private final StudentService studentService;
     private final MapperUtil mapperUtil;
 
     @GetMapping
     public String listDepartments(Model model) {
         List<DepartmentViewModel> departments = mapperUtil
                 .mapList(this.departmentService.findAll(), DepartmentViewModel.class);
+        System.out.println(departments);
         model.addAttribute("departments", departments);
         return "/departments/list";
     }
@@ -29,6 +38,20 @@ public class DepartmentController {
     public String viewDepartment(@PathVariable("id") Long id, Model model) {
         DepartmentViewModel department = mapperUtil.getModelMapper().map(
                 departmentService.findById(id), DepartmentViewModel.class);
+        List<TeacherViewModel> teachers =  mapperUtil
+                .mapList(this.teacherService.findAllByDepartmentId(id), TeacherViewModel.class);
+
+        List<StudentViewModel> students =  mapperUtil
+                .mapList(this.studentService.findAllByDepartmentId(id), StudentViewModel.class);
+
+        if (teachers == null) {
+	        teachers = java.util.Collections.emptyList();
+	    }
+	    if (students == null) {
+	        students = java.util.Collections.emptyList();
+	    }
+        department.setTeachers(teachers);
+        department.setStudents(students);
         model.addAttribute("department", department);
         return "departments/view";
     }

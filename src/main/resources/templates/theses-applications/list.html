@@ -11,7 +11,7 @@
         
         <div class="d-flex justify-content-between align-items-center mb-2">
             <h2>Theses Applications</h2>
-            <template th:replace="~{fragments/layout :: tableActions(@{/thesis-applications/new})}"></template>
+            <template sec:authorize="hasRole('TEACHER')" th:replace="~{fragments/layout :: tableActions(@{/thesis-applications/new})}"></template>
         </div>
         
         <div class="table-responsive">

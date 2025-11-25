@@ -10,6 +10,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import com.nbu.Graduation_System.entity.enums.DepartmentType;
+import com.nbu.Graduation_System.viewmodel.teacher.TeacherViewModel;
+import com.nbu.Graduation_System.viewmodel.student.StudentViewModel;
+
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -30,4 +34,13 @@ public class DepartmentViewModel {
     // @Size(min = 3, max = 50)
     @NotBlank
     private String contactEmail;
+
+    @NotNull
+    private TeacherViewModel dean;
+
+    private List<StudentViewModel> students;
+
+    private List<TeacherViewModel> teachers;
+
+
 }
