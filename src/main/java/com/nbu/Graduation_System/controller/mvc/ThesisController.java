@@ -4,6 +4,7 @@ import com.nbu.Graduation_System.service.thesis.ThesisService;
 import com.nbu.Graduation_System.util.MapperUtil;
 import com.nbu.Graduation_System.util.SecurityUtils;
 import com.nbu.Graduation_System.viewmodel.thesis.ThesisViewModel;
+import com.nbu.Graduation_System.viewmodel.teacher.TeacherViewModel;
 import com.nbu.Graduation_System.viewmodel.student.StudentViewModel;
 
 import java.util.List;
@@ -34,8 +35,11 @@ public class ThesisController {
                 this.thesisService.findAll().stream()
                     .filter(thesis -> thesis.getThesisApplication().getStudent().getId().equals(currentStudent.getId()))
                     .toList(), 
-                ThesisViewModel.class
-            );
+                ThesisViewModel.class);
+        } else if (securityUtils.isTeacher()){
+            TeacherViewModel teacher = securityUtils.getCurrentTeacher();
+            theses = mapperUtil.mapList(
+                thesisService.findAllByDepartmentId(teacher.getDepartment().getId()), ThesisViewModel.class);
         } else {
             theses = mapperUtil.mapList(this.thesisService.findAll(), ThesisViewModel.class);
         }

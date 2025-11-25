@@ -12,13 +12,17 @@ import java.util.List;
 public class Teacher extends User {
     @ManyToOne
     @JoinColumn(name = "department_id")
+    @EqualsAndHashCode.Exclude
     private Department department;
     
     private String academicTitle;
     
     @OneToMany(mappedBy = "supervisor")
+    @EqualsAndHashCode.Exclude
     private List<ThesisApplication> supervisedTheses;
     
     @OneToMany(mappedBy = "reviewer")
+    @EqualsAndHashCode.Exclude
     private List<ThesisReview> reviews;
 }
+

@@ -6,22 +6,30 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.ToString;
+import lombok.EqualsAndHashCode;
+
+import java.util.List;
 
 @Data
+@ToString
+@EqualsAndHashCode
 public class DepartmentDto {
     private Long id;
 
     @NotNull
     private DepartmentType type;
 
-    // @Size(min = 3, max = 50)
     @NotBlank
     private String description;
 
-    // @Size(min = 3, max = 50)
     @NotBlank
     private String contactEmail;
 
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private TeacherDto dean;
+
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private List<TeacherDto> teachers;
 }

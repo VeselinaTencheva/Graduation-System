@@ -11,7 +11,7 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h3 class="card-title mb-0">Thesis Details</h3>
-                <div class="d-flex gap-2" sec:authorize="hasRole('TEACHER')">
+                <div class="d-flex gap-2" sec:authorize="hasAnyRole('STUDENT', 'ADMIN')">
                     <a th:href="@{/theses/{id}/edit(id=${thesis.id})}" class="btn btn-warning">Edit</a>
                     <a th:href="@{'/theses/delete/'+${thesis.id}}" class="btn btn-danger">Delete</a>
                 </div>
@@ -54,11 +54,15 @@
                             class="badge bg-danger text-decoration-none">
                             Negative
                         </a>
-                        <a th:if="${thesis.review == null}"
+                        <a th:if="${thesis.review == null and #authorization.expression('hasRole(''TEACHER'')')}"
                             th:href="@{/thesis-reviews/new(thesisId=${thesis.id})}"
                             class="badge bg-info text-decoration-none">
                             Click to review
                         </a>
+                        <span th:if="${thesis.review == null and !#authorization.expression('hasRole(''TEACHER'')')}"
+                            class="badge bg-secondary">
+                            Review pending
+                        </span>
                     </div>
                 </div>
             </div>

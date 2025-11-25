@@ -23,4 +23,10 @@ public interface ThesisRepository extends JpaRepository<Thesis, Long> {
            "LEFT JOIN FETCH ta.student " +
            "LEFT JOIN FETCH ta.supervisor")
     List<Thesis> findAllWithDetails();
+
+       @Query("SELECT DISTINCT t FROM Thesis t " +
+                 "LEFT JOIN FETCH t.thesisApplication ta " +
+                 "LEFT JOIN FETCH ta.student s " +
+                 "WHERE s.department.id = :departmentId")
+    List<Thesis> findAllByDepartmentId(Long departmentId);
 }

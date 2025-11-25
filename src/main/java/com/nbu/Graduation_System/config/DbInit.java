@@ -230,20 +230,24 @@ public class DbInit implements CommandLineRunner {
         ThesisApplication app3 = createThesisApplication(
             "Blockchain in Finance",
             "Implement blockchain for financial transactions",
-            "Study blockchain tech, Design system, Develop prototype",
-            "Ethereum, Solidity, Web3",
+            "Study blockchain tech",
+            "Ethereum",
             ThesisApplicationStatusType.REJECTED,
             carolClark,
             peterBrown
         );
 
-        // Create theses
-        Thesis thesis1 = createThesis(
-            "AI Education App",
-            "An AI-powered educational application that helps students learn more effectively through personalized content.",
-            app1
+        ThesisApplication app4 = createThesisApplication(
+            "Blockchain in Finance",
+            "Implement blockchain for financial transactions",
+            "Study blockchain tech, Design system, Develop prototype",
+            "Ethereum, Solidity, Web3",
+            ThesisApplicationStatusType.ACCEPTED,
+            carolClark,
+            peterBrown
         );
 
+        // Create theses
         Thesis thesis2 = createThesis(
             "Smart City IoT",
             "A comprehensive IoT infrastructure system for modern smart cities with sensor networks and data analytics.",
@@ -253,20 +257,12 @@ public class DbInit implements CommandLineRunner {
         Thesis thesis3 = createThesis(
             "Blockchain System",
             "A blockchain-based system for secure and transparent record-keeping in educational institutions.",
-            app3
+            app4
         );
 
         // Create thesis reviews
-        createThesisReview(thesis1, janeSmith, true, "Detailed analysis of machine learning applications in healthcare.");
         createThesisReview(thesis2, peterBrown, true, "Comprehensive study of sustainable architecture principles.");
         createThesisReview(thesis3, johnDoe, false, "Needs more practical examples and implementation details.");
-
-        // Create thesis defenses with committee members and grades
-        Set<Teacher> committee1 = new HashSet<>();
-        committee1.add(johnDoe);
-        committee1.add(janeSmith);
-        committee1.add(peterBrown);
-        createThesisDefense(thesis1, LocalDateTime.now().plusDays(7), 5.5, committee1);
 
         Set<Teacher> committee2 = new HashSet<>();
         committee2.add(johnDoe);

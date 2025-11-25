@@ -38,6 +38,11 @@ public class ThesisServiceImpl implements ThesisService {
     }
 
     @Override
+    public List<ThesisDto> findAllByDepartmentId(Long departmentId) {
+        return mapperUtil.mapList(thesisRepository.findAllByDepartmentId(departmentId), ThesisDto.class);
+    }
+
+    @Override
     public ThesisDto save(CreateThesisDto thesisDto) {
         Thesis thesis = mapperUtil.getModelMapper().map(thesisDto, Thesis.class);
         ThesisApplication application = thesisApplicationRepository.findById(thesisDto.getApplicationId())

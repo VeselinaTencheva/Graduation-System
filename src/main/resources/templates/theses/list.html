@@ -11,7 +11,6 @@
         
         <div class="d-flex justify-content-between align-items-center mb-2">
             <h2>Theses</h2>
-            <template th:replace="~{fragments/layout :: tableActions(@{/theses/new})}"></template>
         </div>
         
         <div class="table-responsive">
@@ -52,11 +51,15 @@
                                class="badge bg-danger text-decoration-none">
                                 Negative
                             </a>
-                            <a th:if="${thesis.review == null}"
-                               th:href="@{/thesis-reviews/new(thesisId=${thesis.id})}"
-                               class="badge bg-info text-decoration-none">
+                            <a th:if="${thesis.review == null and #authorization.expression('hasRole(''TEACHER'')')}"
+                            th:href="@{/thesis-reviews/new(thesisId=${thesis.id})}"
+                            class="badge bg-info text-decoration-none">
                                 Click to review
                             </a>
+                            <span th:if="${thesis.review == null and !#authorization.expression('hasRole(''TEACHER'')')}"
+                                class="badge bg-secondary">
+                                Review pending
+                            </span>
                         </td>
                     </tr>
                 </tbody>

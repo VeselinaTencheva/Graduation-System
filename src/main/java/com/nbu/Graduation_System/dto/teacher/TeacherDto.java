@@ -1,21 +1,25 @@
 package com.nbu.Graduation_System.dto.teacher;
 
 import com.nbu.Graduation_System.dto.department.DepartmentDto;
-import com.nbu.Graduation_System.dto.user.UserDto;
+import com.nbu.Graduation_System.dto.thesis_application.ThesisApplicationDto;
+import com.nbu.Graduation_System.dto.thesis_review.ThesisReviewDto;
 
 import lombok.EqualsAndHashCode;
 import lombok.Data;
+import lombok.ToString;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import java.util.List;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class TeacherDto extends UserDto {
-
-    @NotBlank
+@ToString(exclude = {"department", "supervisedTheses", "reviews"})
+@EqualsAndHashCode(exclude = {"department", "supervisedTheses", "reviews"})
+public class TeacherDto {
+    private Long id;
+    private String name;
+    private String email;
     private String academicTitle;
-
-    @NotNull
-    private DepartmentDto department;    
+    private DepartmentDto department;
+    private List<ThesisApplicationDto> supervisedTheses;
+    private List<ThesisReviewDto> reviews;
 }
+

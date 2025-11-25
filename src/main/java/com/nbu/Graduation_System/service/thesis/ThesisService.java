@@ -10,6 +10,7 @@ public interface ThesisService {
     ThesisDto save(CreateThesisDto thesis);
     ThesisDto findById(Long id);
     List<ThesisDto> findAll();
+    List<ThesisDto> findAllByDepartmentId(Long departmentId);
     void deleteById(Long id);
     boolean existsById(Long id);
     ThesisDto createFromApplication(ThesisApplication application);

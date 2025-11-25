@@ -11,7 +11,7 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h3 class="card-title mb-0">Student Details</h3>
-                <div class="d-flex gap-2">
+                <div sec:authorize="hasAnyRole('ADMIN')"class="d-flex gap-2">
                     <a th:href="@{/students/{id}/edit(id=${student.id})}" class="btn btn-warning">Edit</a>
                     <a th:href="@{'/students/delete/'+${student.id}}" class="btn btn-danger">Delete</a>
                 </div>

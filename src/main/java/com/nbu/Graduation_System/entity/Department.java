@@ -5,6 +5,7 @@ import com.nbu.Graduation_System.entity.enums.DepartmentType;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import java.util.List;
 
 @Entity
@@ -16,13 +17,17 @@ public class Department extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private DepartmentType type;
 
+    private String description;
+    private String contactEmail;
+
     @ManyToOne
     @JoinColumn(name = "dean_id")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Teacher dean;
 
     @OneToMany(mappedBy = "department")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private List<Teacher> teachers;
-
-    private String description;
-    private String contactEmail;
 }

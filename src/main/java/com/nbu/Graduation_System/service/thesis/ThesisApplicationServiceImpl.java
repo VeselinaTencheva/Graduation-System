@@ -47,6 +47,11 @@ public class ThesisApplicationServiceImpl implements ThesisApplicationService {
     }
 
     @Override
+    public List<ThesisApplicationDto> findAllByDepartment(Long departmentId) {
+        return mapperUtil.mapList(thesisApplicationRepository.findByDepartmentId(departmentId), ThesisApplicationDto.class);
+    }
+
+    @Override
     public List<ThesisApplicationDto> findBySupervisorId(Long id) {
         return mapperUtil.mapList(thesisApplicationRepository.findBySupervisorId(id), ThesisApplicationDto.class);
     }

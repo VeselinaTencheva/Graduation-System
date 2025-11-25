@@ -31,10 +31,20 @@ public class ThesisApplicationController {
     private final MapperUtil mapperUtil;
     private final SecurityUtils securityUtils;
     
+
     @GetMapping
     public String listThesesApplications(Model model) {
-        List<ThesisApplicationViewModel> applications = mapperUtil.mapList(
+        // If user is a teacher, show only these applications in the same department
+        List<ThesisApplicationViewModel> applications;
+        if (securityUtils.isTeacher()) {
+            TeacherViewModel teacher = securityUtils.getCurrentTeacher();
+            applications = mapperUtil.mapList(
+                thesisApplicationService.findAllByDepartment(teacher.getDepartment().getId()), ThesisApplicationViewModel.class);
+        } else {
+            applications = mapperUtil.mapList(
                 thesisApplicationService.findAll(), ThesisApplicationViewModel.class);
+        }
+        
         model.addAttribute("thesesApplications", applications);
         model.addAttribute("statusType", ThesisApplicationStatusType.values());
         return "theses-applications/list";
