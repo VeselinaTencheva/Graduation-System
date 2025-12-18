@@ -6,14 +6,12 @@ import com.nbu.Graduation_System.entity.enums.ThesisApplicationStatusType;
 import com.nbu.Graduation_System.service.teacher.TeacherService;
 import com.nbu.Graduation_System.service.department.DepartmentService;
 import com.nbu.Graduation_System.service.thesis.ThesisApplicationService;
-import com.nbu.Graduation_System.service.thesis.ThesisDefenseService;
 import com.nbu.Graduation_System.util.MapperUtil;
 import com.nbu.Graduation_System.viewmodel.department.DepartmentViewModel;
 import com.nbu.Graduation_System.viewmodel.teacher.CreateTeacherViewModel;
 import com.nbu.Graduation_System.viewmodel.teacher.UpdateTeacherViewModel;
 import com.nbu.Graduation_System.viewmodel.teacher.TeacherViewModel;
 import com.nbu.Graduation_System.viewmodel.thesis_application.ThesisApplicationViewModel;
-import com.nbu.Graduation_System.viewmodel.thesis_defense.ThesisDefenseViewModel;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -33,7 +31,6 @@ public class TeacherViewController {
     
     private final TeacherService teacherService;
     private final ThesisApplicationService thesisApplicationService;
-    private final ThesisDefenseService thesisDefenseService;
     private final DepartmentService departmentService;
     private final MapperUtil mapperUtil;
 
@@ -68,14 +65,6 @@ public class TeacherViewController {
         model.addAttribute("thesesApplications", applications);
         model.addAttribute("statusType", ThesisApplicationStatusType.values());
         return "theses-applications/list";
-    }
-
-    @GetMapping("/{id}/defenses")
-    public String listThesisDefensesByTeacherId(@PathVariable("id") Long id, Model model) {
-        List<ThesisDefenseViewModel> defenses = mapperUtil
-                .mapList(thesisDefenseService.findAll(), ThesisDefenseViewModel.class);
-        model.addAttribute("defenses", defenses);
-        return "theses-defenses/list";
     }
 
     @GetMapping("/new")

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: header('Defense Sessions')"></head>
+<body>
+<nav th:replace="fragments/layout :: navigation"></nav>
+
+<div class="container">
+    <div th:replace="fragments/layout :: message"></div>
+
+
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <h2>Defense Sessions</h2>
+        <template sec:authorize="hasAnyRole('ADMIN', 'TEACHER')" th:replace="~{fragments/layout :: tableActions(@{/defense-sesions/new})}"></template>
+    </div>
+
+    <table class="table table-striped" th:if="${sessions != null and !sessions.isEmpty()}">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Date</th>
+            <th>Committee Members</th>
+            <th>Theses Count</th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr th:each="s : ${sessions}" 
+                    th:onclick="'window.location.href=\'' + @{/defense-sessions/{id}(id=${s.id})} + '\''"
+                    style="cursor: pointer;">
+                <td th:text="${s.id}"></td>
+                <td th:text="${#temporals.format(s.defenseDate, 'dd-MM-yyyy HH:mm')}"></td>
+                <td>
+                    <span th:each="t, iter : ${s.committeeMembers}">
+                        <span th:text="${t.name}"></span><span th:if="${!iter.last}">, </span>
+                    </span>
+                </td>
+                <td th:text="${s.defenses != null ? s.defenses.size() : 0}">TODO Add link to theses defenses table</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div th:if="${sessions == null or sessions.isEmpty()}" class="alert alert-info">
+        No defense sessions scheduled yet.
+    </div>
+</div>
+
+<footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

@@ -11,7 +11,7 @@ import com.nbu.Graduation_System.entity.base.BaseEntity;
 
 @Entity
 @Data
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = {"application", "review", "defense"})
 @Table(name = "theses")
 public class Thesis extends BaseEntity {
     

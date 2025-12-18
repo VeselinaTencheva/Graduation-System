@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: header('Defense Session Details')"></head>
+<body>
+<nav th:replace="fragments/layout :: navigation"></nav>
+
+<div class="container mt-4">
+    <div th:replace="fragments/layout :: message"></div>
+
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h3 class="card-title mb-0">Defense Session Details</h3>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">ID:</dt>
+                <dd class="col-sm-9" th:text="${session.id}"></dd>
+
+                <dt class="col-sm-3">Defense Date:</dt>
+                <dd class="col-sm-9"
+                    th:text="${#temporals.format(session.defenseDate, 'dd-MM-yyyy HH:mm')}"></dd>
+
+                <dt class="col-sm-3">Committee:</dt>
+                <dd class="col-sm-9">
+                    <span th:each="t, iter : ${session.committeeMembers}">
+                        <span th:text="${t.name}"></span>
+                        <span th:if="${!iter.last}">, </span>
+                    </span>
+                </dd>
+            </dl>
+
+            <h4 class="mt-4">Theses in this Session</h4>
+
+            <table class="table table-bordered"
+                   th:if="${session.defenses != null and !session.defenses.isEmpty()}">
+                <thead>
+                <tr>
+                    <th>Thesis Title</th>
+                    <th>Student</th>
+                    <th>Current Grade</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="d : ${session.defenses}">
+                    <td th:text="${d.thesis.title}"></td>
+                    <td th:text="${d.thesis.thesisApplication.student.name}"></td>
+                    <td>
+                        <span th:if="${d.grade != null}" th:text="${d.grade}"></span>
+                        <span th:if="${d.grade == null}" class="text-muted">Not graded</span>
+                    </td>
+                    <td>
+                        <a th:href="@{/defenses/{sid}/grade/{did}(sid=${session.id}, did=${d.id})}"
+                           class="btn btn-sm btn-outline-primary">
+                            Grade
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div th:if="${session.defenses == null or session.defenses.isEmpty()}" class="alert alert-info">
+                No theses attached to this session.
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

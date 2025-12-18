@@ -1,14 +1,12 @@
 package com.nbu.Graduation_System.service.thesis;
 
-import com.nbu.Graduation_System.dto.thesis_defense.CreateThesisDefenseDto;
 import com.nbu.Graduation_System.dto.thesis_defense.ThesisDefenseDto;
 import com.nbu.Graduation_System.entity.ThesisDefense;
 import com.nbu.Graduation_System.repository.ThesisDefenseRepository;
 import com.nbu.Graduation_System.util.MapperUtil;
-
 import lombok.AllArgsConstructor;
-
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,10 +19,9 @@ public class ThesisDefenseServiceImpl implements ThesisDefenseService {
 
     @Override
     public ThesisDefenseDto findById(Long id) {
-        return mapperUtil.getModelMapper().map(
-                thesisDefenseRepository.findById(id)
-                        .orElseThrow(() -> new RuntimeException("ThesisDefense with id=" + id + " not found!")),
-                ThesisDefenseDto.class);
+        ThesisDefense defense = thesisDefenseRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("ThesisDefense with id=" + id + " not found!"));
+        return mapperUtil.getModelMapper().map(defense, ThesisDefenseDto.class);
     }
 
     @Override
@@ -34,12 +31,31 @@ public class ThesisDefenseServiceImpl implements ThesisDefenseService {
 
     @Override
     public List<ThesisDefenseDto> findByCommitteeMemberId(Long teacherId) {
-        return mapperUtil.mapList(thesisDefenseRepository.findByTeacherId(teacherId), ThesisDefenseDto.class);
+        return mapperUtil.mapList(
+            thesisDefenseRepository.findByCommitteeMemberId(teacherId),
+            ThesisDefenseDto.class
+        );
     }
 
     @Override
-    public ThesisDefenseDto save(CreateThesisDefenseDto defenseDto) {
-        ThesisDefense defense = mapperUtil.getModelMapper().map(defenseDto, ThesisDefense.class);
+    public List<ThesisDefenseDto> findBySessionId(Long sessionId) {
+        return mapperUtil.mapList(
+            thesisDefenseRepository.findBySessionId(sessionId),
+            ThesisDefenseDto.class
+        );
+    }
+
+    @Override
+    @Transactional
+    public ThesisDefenseDto updateGrade(Long defenseId, Double grade) {
+        if (grade == null || grade < 2.0 || grade > 6.0) {
+            throw new IllegalArgumentException("Grade must be between 2.0 and 6.0");
+        }
+
+        ThesisDefense defense = thesisDefenseRepository.findById(defenseId)
+            .orElseThrow(() -> new RuntimeException("ThesisDefense not found with id=" + defenseId));
+
+        defense.setGrade(grade);
         defense = thesisDefenseRepository.save(defense);
         return mapperUtil.getModelMapper().map(defense, ThesisDefenseDto.class);
     }
@@ -48,37 +64,4 @@ public class ThesisDefenseServiceImpl implements ThesisDefenseService {
     public void deleteById(Long id) {
         thesisDefenseRepository.deleteById(id);
     }
-
-    // @Override
-    // public boolean existsById(Long id) {
-    //     return thesisDefenseRepository.existsById(id);
-    // }
-
-    // @Override
-    // public ThesisDefenseDto scheduleDefense(Long thesisId, LocalDateTime defenseDate, Set<Teacher> committee) {
-    //     Thesis thesis = thesisRepository.findById(thesisId)
-    //         .orElseThrow(() -> new EntityNotFoundException("Thesis not found"));
-
-    //     ThesisDefense defense = new ThesisDefense();
-    //     defense.setThesis(thesis);
-    //     defense.setDefenseDate(defenseDate);
-    //     defense.setCommitteeMembers(committee);
-        
-    //     defense = thesisDefenseRepository.save(defense);
-    //     return thesisDefenseMapper.toDto(defense);
-    // }
-
-    // @Override
-    // public ThesisDefenseDto gradeDefense(Long defenseId, Double grade) {
-    //     ThesisDefense defense = thesisDefenseRepository.findById(defenseId)
-    //         .orElseThrow(() -> new EntityNotFoundException("Defense not found"));
-            
-    //     if (grade < 2.0 || grade > 6.0) {
-    //         throw new IllegalArgumentException("Grade must be between 2.0 and 6.0");
-    //     }
-
-    //     defense.setGrade(grade);
-    //     defense = thesisDefenseRepository.save(defense);
-    //     return thesisDefenseMapper.toDto(defense);
-    // }
 }

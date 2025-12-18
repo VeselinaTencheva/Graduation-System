@@ -1,0 +1,87 @@
+<!-- <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: header('New Defense Session')"></head>
+<body>
+<nav th:replace="fragments/layout :: navigation"></nav>
+
+<div class="container mt-4">
+    <div th:replace="fragments/layout :: message"></div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title mb-0">New Defense Session</h3>
+        </div>
+        <div class="card-body">
+            <form th:action="@{/defenses}" th:object="${session}" method="post" class="needs-validation" novalidate>
+
+                <div class="mb-3">
+                    <label for="defenseDate" class="form-label">Defense Date &amp; Time *</label>
+                    <input type="datetime-local"
+                           id="defenseDate"
+                           class="form-control"
+                           th:field="*{defenseDate}"
+                           th:errorclass="is-invalid" />
+                    <div class="invalid-feedback"
+                         th:if="${#fields.hasErrors('defenseDate')}"
+                         th:errors="*{defenseDate}">
+                        Please enter a valid date and time
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="committeeTeacherIds" class="form-label">Committee Members *</label>
+                    <select id="committeeTeacherIds"
+                            class="form-select"
+                            multiple
+                            size="5"
+                            th:field="*{committeeTeacherIds}"
+                            th:errorclass="is-invalid">
+                        <option th:each="t : ${teachers}"
+                                th:value="${t.id}"
+                                th:text="${t.name + ' (' + t.email + ')'}"></option>
+                    </select>
+                    <div class="form-text">
+                        Hold Ctrl (Cmd on Mac) to select multiple teachers.
+                    </div>
+                    <div class="invalid-feedback"
+                         th:if="${#fields.hasErrors('committeeTeacherIds')}"
+                         th:errors="*{committeeTeacherIds}">
+                        Please select at least one committee member.
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="thesisIds" class="form-label">Theses in this Session *</label>
+                    <select id="thesisIds"
+                            class="form-select"
+                            multiple
+                            size="8"
+                            th:field="*{thesisIds}"
+                            th:errorclass="is-invalid">
+                        <option th:each="th : ${theses}"
+                                th:value="${th.id}"
+                                th:text="${th.title + ' - ' + th.thesisApplication.student.name}"></option>
+                    </select>
+                    <div class="form-text">
+                        Select all theses that will be defended in this session.
+                    </div>
+                    <div class="invalid-feedback"
+                         th:if="${#fields.hasErrors('thesisIds')}"
+                         th:errors="*{thesisIds}">
+                        Please select at least one thesis.
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Create Session</button>
+                    <a th:href="@{/defenses}" class="btn btn-secondary">Cancel</a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html> -->

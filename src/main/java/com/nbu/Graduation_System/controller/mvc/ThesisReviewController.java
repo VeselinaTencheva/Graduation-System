@@ -39,20 +39,22 @@ public class ThesisReviewController {
 
     @GetMapping
     public String listReviews(Model model) {
-        if (securityUtils.isStudent()) {
+        List<ThesisReviewViewModel> reviews;
+        if(securityUtils.isStudent()) {
             StudentViewModel currentStudent = securityUtils.getCurrentStudent();
-            List<ThesisReviewViewModel> reviews = mapperUtil.mapList(
+            reviews = mapperUtil.mapList(
                 thesisReviewService.findByStudentId(currentStudent.getId()), 
                 ThesisReviewViewModel.class
             );
-            model.addAttribute("reviews", reviews);
+        } else if (securityUtils.isTeacher()) {
+            TeacherViewModel teacher = securityUtils.getCurrentTeacher();
+            reviews = mapperUtil.mapList(
+                thesisReviewService.findAllByDepartmentId(teacher.getDepartment().getId()), ThesisReviewViewModel.class);
         } else {
-            List<ThesisReviewViewModel> reviews = mapperUtil.mapList(
-                thesisReviewService.findAll(), 
-                ThesisReviewViewModel.class
-            );
-            model.addAttribute("reviews", reviews);
+            reviews =  mapperUtil.mapList(
+                thesisReviewService.findAll(), ThesisReviewViewModel.class);
         }
+        model.addAttribute("reviews", reviews);
         return "theses-reviews/list";
     }
 

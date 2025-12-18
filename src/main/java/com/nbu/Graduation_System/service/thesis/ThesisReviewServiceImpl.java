@@ -43,6 +43,14 @@ public class ThesisReviewServiceImpl implements ThesisReviewService {
     }
 
     @Override
+    public List<ThesisReviewDto> findAllByDepartmentId(Long departmentId) {
+        return mapperUtil.mapList(
+            thesisReviewRepository.findByReviewerDepartmentId(departmentId),
+            ThesisReviewDto.class
+        );
+    }
+
+    @Override
     public ThesisReviewDto save(CreateThesisReviewDto reviewDto) {
         ThesisReview review = mapperUtil.getModelMapper().map(reviewDto, ThesisReview.class);
         review.setReviewDate(LocalDateTime.now());
@@ -80,7 +88,7 @@ public class ThesisReviewServiceImpl implements ThesisReviewService {
     @Override
     public List<ThesisReviewDto> findByStudentId(Long studentId) {
         return mapperUtil.mapList(
-            thesisReviewRepository.findByThesis_ThesisApplication_Student_Id(studentId),
+            thesisReviewRepository.findByThesisThesisApplicationStudentId(studentId),
             ThesisReviewDto.class
         );
     }

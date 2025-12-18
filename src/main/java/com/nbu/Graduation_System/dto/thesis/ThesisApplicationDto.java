@@ -2,17 +2,17 @@ package com.nbu.Graduation_System.dto.thesis;
 
 import java.time.LocalDateTime;
 
-import com.nbu.Graduation_System.dto.thesis_application.ThesisApplicationDto;
 import com.nbu.Graduation_System.dto.thesis_defense.ThesisDefenseDto;
 import com.nbu.Graduation_System.dto.thesis_review.ThesisReviewDto;
+import com.nbu.Graduation_System.dto.thesis.ThesisDto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 @Data
-@ToString(exclude = {"thesisApplication", "review", "defense"})
-@EqualsAndHashCode(exclude = {"thesisApplication", "review", "defense"})
-public class ThesisDto {
+@ToString(exclude = {"thesis", "student", "supervisor"})
+@EqualsAndHashCode(exclude = {"thesis", "student", "supervisor"})
+public class ThesisApplicationDto {
 
     private Long id;
 
@@ -20,8 +20,8 @@ public class ThesisDto {
 
     private String content;
 
-    private ThesisApplicationDto thesisApplication;
-    
+    private ThesisDto thesis;
+
     private ThesisReviewDto review;
     
     private ThesisDefenseDto defense;

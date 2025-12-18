@@ -10,15 +10,21 @@
 
         <h2>Thesis Defenses</h2>
 
-        <div class="table-responsive">
+        <!-- If there are no defenses -->
+        <div th:if="${#lists.isEmpty(defenses)}" class="alert alert-info mt-3">
+            There are no thesis defenses scheduled or recorded yet.
+        </div>
+
+        <div class="table-responsive" th:if="${!#lists.isEmpty(defenses)}">
             <table class="table table-hover">
                 <thead>
                     <tr>
                         <th>ID</th>
                         <th>Thesis Title</th>
-                        <th>Defense Date</th>
+                        <!-- <th>Defense Date</th> -->
                         <th>Grade</th>
-                        <th>Committee Members</th>
+                        <!-- <th>Committee Members</th> -->
+                        <th> TODO consider adding more columns</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -28,14 +34,15 @@
                         class="table-row-link">
                         <td th:text="${defense.id}"></td>
                         <td th:text="${defense.thesis.title}"></td>
-                        <td th:text="${#temporals.format(defense.defenseDate, 'dd-MM-yyyy HH:mm')}"></td>
+                        <!-- <td th:text="${defense.defenseDate}"></td> -->
+                        <!-- <td th:text="${defense.defenseDate != null ? #temporals.format(defense.defenseDate, 'dd-MM-yyyy HH:mm') : 'Not scheduled'}"></td> -->
                         <td th:text="${defense.grade}"></td>
-                        <td>
+                        <!-- <td>
                             <span th:each="member, iterStat : ${defense.committeeMembers}">
                                 <span th:text="${member.academicTitle}"></span>
                                 <span th:if="${!iterStat.last}">, </span>
                             </span>
-                        </td>
+                        </td> -->
                     </tr>
                 </tbody>
             </table>

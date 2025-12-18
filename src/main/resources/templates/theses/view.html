@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head th:replace="fragments/layout :: header('Thesis Details')">
 </head>
@@ -6,20 +6,37 @@
     <nav th:replace="fragments/layout :: navigation"></nav>
     
     <div class="container">
-        <div th:replace="fragments/layout :: message"></div>
+        <div th:if="${thesis.review != null}" class="alert alert-info" role="alert">
+            <i class="bi bi-info-circle-fill"></i>
+            <strong>Note:</strong> This thesis is under review or has been reviewed. No further changes can be performed.
+        </div>
         
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h3 class="card-title mb-0">Thesis Details</h3>
-                <div class="d-flex gap-2" sec:authorize="hasAnyRole('STUDENT', 'ADMIN')">
-                    <a th:href="@{/theses/{id}/edit(id=${thesis.id})}" class="btn btn-warning">Edit</a>
-                    <a th:href="@{'/theses/delete/'+${thesis.id}}" class="btn btn-danger">Delete</a>
+                <div class="d-flex gap-2" sec:authorize="hasAnyRole('STUDENT', 'ADMIN')" th:if="${thesis.review == null}">
+                    <a th:href="@{/theses/{id}/edit(id=${thesis.id})}" 
+                    class="btn btn-warning"
+                    th:classappend="${thesis.review != null} ? 'disabled' : ''"
+                    th:attr="aria-disabled=${thesis.review != null}">
+                        Edit
+                    </a>
+                    <a th:href="@{'/theses/delete/'+${thesis.id}}" 
+                    class="btn btn-danger"
+                    th:classappend="${thesis.review != null} ? 'disabled' : ''"
+                    th:attr="aria-disabled=${thesis.review != null}">
+                        Delete
+                    </a>
                 </div>
             </div>
             <div class="card-body">
                 <div class="row mb-3">
                     <div class="col-sm-3"><strong>ID:</strong></div>
                     <div class="col-sm-9" th:text="${thesis.id}"></div>
+                </div>
+                  <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Title:</strong></div>
+                    <div class="col-sm-9" th:text="${thesis.getTitle}"></div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-sm-3"><strong>Content:</strong></div>
@@ -71,4 +88,4 @@
 
     <footer th:replace="fragments/layout :: footer"></footer>
 </body>
-</html>
+</html> -->

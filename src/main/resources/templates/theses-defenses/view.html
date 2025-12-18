@@ -18,23 +18,18 @@
                 </div>
                 <div class="row mb-3">
                     <div class="col-sm-3"><strong>Defense Date:</strong></div>
-                    <div class="col-sm-9" th:text="${#temporals.format(defense.defenseDate, 'dd-MM-yyyy HH:mm')}"></div>
+                    <div class="col-sm-9" th:text="${defense.session.defenseDate}"></div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-sm-3"><strong>Grade:</strong></div>
                     <div class="col-sm-9" th:text="${defense.grade}"></div>
                 </div>
                 <div class="row mb-3">
-                    <div class="col-sm-3"><strong>Committee Members:</strong></div>
-                    <div class="col-sm-9">
-                        <span th:each="member, iterStat : ${defense.committeeMembers}">
-                            <span th:text="${member.academicTitle}"></span>
-                            <span th:if="${!iterStat.last}">, </span>
-                        </span>
-                    </div>
+                    <div class="col-sm-3"><strong>Session Info:</strong></div>
+                   <div class="col-sm-9" th:text="${defense.grade}"></div> <!--  TODO add link to session id -->
                 </div>
                 <div class="row mb-3">
-                    <div class="col-sm-3"><strong>Student:</strong></div>
+                    <div class="col-sm-3"><strong>Student FN:</strong></div>
                     <div class="col-sm-9" th:text="${defense.thesis.thesisApplication.student.facultyNumber}"></div>
                 </div>
             </div>

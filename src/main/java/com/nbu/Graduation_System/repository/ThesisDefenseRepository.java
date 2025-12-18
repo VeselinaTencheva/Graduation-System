@@ -10,6 +10,17 @@ import java.util.List;
 
 @Repository
 public interface ThesisDefenseRepository extends JpaRepository<ThesisDefense, Long> {
-    @Query("SELECT td FROM ThesisDefense td JOIN td.committeeMembers cm WHERE cm.id = :teacherId")
-    List<ThesisDefense> findByTeacherId(@Param("teacherId") Long teacherId);
+
+    @Query("""
+       SELECT td
+       FROM ThesisDefense td
+       JOIN td.session s
+       JOIN s.committeeMembers cm
+       WHERE cm.id = :teacherId
+       """)
+    List<ThesisDefense> findByCommitteeMemberId(@Param("teacherId") Long teacherId);
+
+    List<ThesisDefense> findBySessionId(Long sessionId);
+
+    List<ThesisDefense> findByThesisId(Long thesisId);
 }

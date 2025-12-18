@@ -15,8 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Component
 @AllArgsConstructor
@@ -47,9 +46,12 @@ public class DbInit implements CommandLineRunner {
     private ThesisDefenseRepository thesisDefenseRepository;
 
     @Autowired
+    private DefenseSessionRepository defenseSessionRepository;
+
+    @Autowired
     private DepartmentRepository departmentRepository;
 
-   private void createSuperAdminIfNotExists() {
+    private void createSuperAdminIfNotExists() {
         String email = System.getenv().getOrDefault("SUPERADMIN_EMAIL", "superadmin@example.com");
         String rawPassword = System.getenv().getOrDefault("SUPERADMIN_PASSWORD", "superadmin");
 
@@ -69,7 +71,6 @@ public class DbInit implements CommandLineRunner {
 
     @Transactional
     public void createDepartmentsIfNotExists() {
-        // Skip if departments already exist
         if (departmentRepository.count() > 0) {
             return;
         }
@@ -116,6 +117,7 @@ public class DbInit implements CommandLineRunner {
             ThesisApplicationStatusType status,
             Student student,
             Teacher supervisor) {
+
         ThesisApplication application = new ThesisApplication();
         application.setTitle(title);
         application.setObjective(objective);
@@ -135,7 +137,7 @@ public class DbInit implements CommandLineRunner {
         thesis.setThesisApplication(application);
         return thesisRepository.save(thesis);
     }
-// 
+
     private ThesisReview createThesisReview(Thesis thesis, Teacher reviewer, boolean isPositive, String content) {
         ThesisReview review = new ThesisReview();
         review.setThesis(thesis);
@@ -146,12 +148,20 @@ public class DbInit implements CommandLineRunner {
         return thesisReviewRepository.save(review);
     }
 
-    private ThesisDefense createThesisDefense(Thesis thesis, LocalDateTime defenseDate, Double grade, Set<Teacher> committeeMembers) {
+    /** create a DefenseSession (date + committee) */
+    private DefenseSession createDefenseSession(LocalDateTime defenseDate, List<Teacher> committeeMembers) {
+        DefenseSession session = new DefenseSession();
+        session.setDefenseDate(defenseDate);
+        session.setCommitteeMembers(committeeMembers);
+        return defenseSessionRepository.save(session);
+    }
+
+    /** create ThesisDefense (grade + thesis + session) */
+    private ThesisDefense createThesisDefense(Thesis thesis, DefenseSession session, Double grade) {
         ThesisDefense defense = new ThesisDefense();
         defense.setThesis(thesis);
-        defense.setDefenseDate(defenseDate);
+        defense.setSession(session);
         defense.setGrade(grade);
-        defense.setCommitteeMembers(committeeMembers);
         return thesisDefenseRepository.save(defense);
     }
 
@@ -174,7 +184,7 @@ public class DbInit implements CommandLineRunner {
         Teacher sarahConnor = createTeacher("Sarah Connor", "sarah.connor@nbu.bg", "Professor", DepartmentType.INFORMATICS);
         Teacher davidMiller = createTeacher("David Miller", "david.miller@nbu.bg", "Professor", DepartmentType.INFORMATION_TECHNOLOGIES);
 
-        // Assign deans to departments
+        // Assign deans
         Department csDept = departmentRepository.findByType(DepartmentType.COMPUTER_SCIENCE).orElseThrow();
         csDept.setDean(mikeSimpson);
         departmentRepository.save(csDept);
@@ -188,25 +198,11 @@ public class DbInit implements CommandLineRunner {
         departmentRepository.save(itDept);
 
         // Create students
-        Student aliceJohnson = createStudent(
-            "Alice Johnson", 
-            "alice.johnson@nbu.bg", 
-            DepartmentType.COMPUTER_SCIENCE
-        );
+        Student aliceJohnson = createStudent("Alice Johnson", "alice.johnson@nbu.bg", DepartmentType.COMPUTER_SCIENCE);
+        Student bobWilson   = createStudent("Bob Wilson", "bob.wilson@nbu.bg", DepartmentType.INFORMATICS);
+        Student carolClark  = createStudent("Carol Clark", "carol.clark@nbu.bg", DepartmentType.INFORMATION_TECHNOLOGIES);
 
-        Student bobWilson = createStudent(
-            "Bob Wilson", 
-            "bob.wilson@nbu.bg", 
-            DepartmentType.INFORMATICS
-        );
-
-        Student carolClark = createStudent(
-            "Carol Clark", 
-            "carol.clark@nbu.bg", 
-            DepartmentType.INFORMATION_TECHNOLOGIES
-        );
-
-        // Create thesis applications
+        // Thesis applications
         ThesisApplication app1 = createThesisApplication(
             "AI in Education",
             "Develop AI-based educational tools",
@@ -247,7 +243,7 @@ public class DbInit implements CommandLineRunner {
             peterBrown
         );
 
-        // Create theses
+        // Theses
         Thesis thesis2 = createThesis(
             "Smart City IoT",
             "A comprehensive IoT infrastructure system for modern smart cities with sensor networks and data analytics.",
@@ -260,18 +256,24 @@ public class DbInit implements CommandLineRunner {
             app4
         );
 
-        // Create thesis reviews
+        // Reviews
         createThesisReview(thesis2, peterBrown, true, "Comprehensive study of sustainable architecture principles.");
         createThesisReview(thesis3, johnDoe, false, "Needs more practical examples and implementation details.");
 
-        Set<Teacher> committee2 = new HashSet<>();
+        // Defense sessions + defenses
+
+        List<Teacher> committee2 = new ArrayList<>();
         committee2.add(johnDoe);
         committee2.add(janeSmith);
-        createThesisDefense(thesis2, LocalDateTime.now().plusDays(14), 3.0, committee2);
 
-        Set<Teacher> committee3 = new HashSet<>();
+        DefenseSession session2 = createDefenseSession(LocalDateTime.now().plusDays(14), committee2);
+        createThesisDefense(thesis2, session2, 3.0);
+
+        List<Teacher> committee3 = new ArrayList<>();
         committee3.add(janeSmith);
         committee3.add(peterBrown);
-        createThesisDefense(thesis3, LocalDateTime.now().plusDays(21), 4.0, committee3);
+
+        DefenseSession session3 = createDefenseSession(LocalDateTime.now().plusDays(21), committee3);
+        createThesisDefense(thesis3, session3, 4.0);
     }
 }

@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = {"student", "supervisor", "thesis"})
 @Table(name = "thesis_applications")
 public class ThesisApplication extends BaseEntity {
 
